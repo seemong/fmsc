@@ -11,6 +11,7 @@
 #include <map>
 #include <string>
 #include <tuple>
+#include <iostream>
 using namespace std;
 
 #include "geometry.h"
@@ -37,7 +38,7 @@ public:
         return _attribs[k];
     }
 
-    map<string, string> get_attribs_iterator() {
+    map<string, string> get_attribs_iterator() const {
         return _attribs;
     }
 };
@@ -47,6 +48,9 @@ protected:
     Coord _coord;
 
 public:
+    Node() : Mapobject(""), _coord(Coord(0, 0, 0)) {
+    }
+    
     Node(string id, Coord coord) : Mapobject(id), _coord(coord) {
     }
 
@@ -80,7 +84,7 @@ protected:
     list<string> _node_ids;
 
 public:
-    Way(string id) : Mapobject(id) {
+    Way(string id="") : Mapobject(id) {
     }
 
     list<string> get_node_ids() const {
@@ -92,11 +96,22 @@ public:
     }
 };
 
+class _NodeDictElt {
+public:
+    int _index;
+    Node _node;
+};
+
+class _WayDictElt {
+public:
+    int _index;
+    Way _way;
+};
+
 class Map : public Mapobject {
 protected:
-
-    map<string, pair<int, Node>> _nodes_dict;
-    map<string, pair<int, Way>> _ways_dict;
+    map<string, _NodeDictElt> _nodes_dict;
+    map<string, _WayDictElt> _ways_dict;
 
     int _last_node_index = 0;
     int _last_way_index = 0;
@@ -105,7 +120,13 @@ public:
     Map(string id) : Mapobject(id) {
     }
 
-    void add_node(string id, Coord coord);
+    void add_node(Node n);
+    
+    void add_way(Way w);
+    
+    friend ostream& operator<< (ostream& out, const Map& m); 
+    
+    static Map * make_map(string id, string name);
 };
 
 #endif // MAPOBJECT_H

@@ -11,8 +11,3 @@ ostream& operator <<(ostream& outputStream, const Coord& c) {
         << c.get_z() << ")";
 }
 
-
-int main() {
-    Coord c(1, 2, 3);
-    cout << c << "\n";
-}
