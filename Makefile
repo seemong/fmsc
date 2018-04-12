@@ -4,10 +4,12 @@ OBJECTS = \
 	fms/fms.o
 
 .cpp.o:
-	g++ -c -I . $< -o $@
+	g++ -c -I . -I /usr/include/libxml2 $< -o $@
+	
+LIBS = -lxml2
 
 runfms: $(OBJECTS)
-	g++ $(OBJECTS) -o runfms
+	g++ $(OBJECTS) $(LIBS) -o runfms
 
 fms/fms.o: fms/fms.cpp geometry/geometry.h geometry/mapobject.h
 
