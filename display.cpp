@@ -3,7 +3,7 @@
  *
  * Abstracts Open GL display
  */
- 
+
 #include "display.h"
 
 // The list of displays
@@ -20,7 +20,7 @@ Display::~Display() {
 
 void
 Display::redraw_all() {
-    for(list<Display *>::iterator it = _displays.begin(); 
+    for(list<Display *>::iterator it = _displays.begin();
         it != _displays.end(); it++) {
         (*it)->predraw();
         (*it)->redraw();
@@ -37,12 +37,12 @@ Display::create(int argc, char ** argv) {
     glutInitWindowSize(_width, _height);
     glutInitWindowPosition(_x, _y);
     glutDisplayFunc(redraw_all);
-    
+
     // set window properties
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glShadeModel(GL_SMOOTH);
-    
+
     // set up lighting
     glEnable(GL_LIGHTING);
     // set up light 0
@@ -58,11 +58,18 @@ Display::create(int argc, char ** argv) {
 }
 
 void
+Display::set_redraw(void (*redraw)(Display *, void *), void * arg) {
+    _redraw = redraw;
+    _redraw_arg = arg;
+}
+
+void
 Display::predraw() {
 }
 
 void
 Display::redraw() {
+    this->_redraw(this, _redraw_arg);
 }
 
 void
@@ -70,5 +77,20 @@ Display::postdraw() {
 }
 
 void
-Display::get_event() {
+Display::set_ortho(int x, int y, int width, int height) {
+}
+
+
+void
+Display::set_perspective(float fov, float aspect, float zNear, float zFar) {
+}
+
+void
+Display::lookAt(float eyex, float eyey, float eyez,
+    float centerx, float centery, float centerz,
+    float upx, float upy, float upz) {
+}
+
+void
+Display::set_position(float x, float y, float z, float w) {
 }

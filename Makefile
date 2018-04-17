@@ -1,13 +1,13 @@
 OBJECTS = \
-	display/display.o \
-	geometry/geometry.o \
-	geometry/mapobject.o \
-	fms/fms.o
+	display.o \
+	geometry.o \
+	mapobject.o \
+	fms.o
 
 .cpp.o:
 	g++ -c $(CFLAGS) $< -o $@
 
-CFLAGS = -g
+CFLAGS = -g -I/usr/include/libxml2
 
 LIBS = -lxml2 -lGL -lglut
 
