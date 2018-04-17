@@ -105,6 +105,12 @@ public:
         float x, float y, float z, float r, float g, float b);
 
     /**
+     * Draw a wire sphere
+     */
+    void draw_wire_sphere(float radius, int slices, int stacks,
+        float x, float y, float z, float r, float g, float b);
+
+    /**
      * Draw a solid sphere
      */
     void draw_solid_cube(float size, float x, float y, float z,

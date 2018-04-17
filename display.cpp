@@ -133,5 +133,22 @@ Display::draw_solid_sphere(float radius, int slices, int stacks,
 void
 Display::draw_solid_cube(float size, float x, float y, float z,
     float r, float g, float b) {
+    glPushMatrix();
+    glColor3f(r, g, b);
+    glTranslatef(x, y, z);
+    glutSolidCube(size);
+    glPopMatrix();
+}
 
+/**
+ * Draw a wire sphere
+ */
+void
+Display::draw_wire_sphere(float radius, int slices, int stacks,
+    float x, float y, float z, float r, float g, float b) {
+    glPushMatrix();
+    glColor3f(r, g, b);
+    glTranslatef(x, y, z);
+    glutWireSphere(radius, slices, stacks);
+    glPopMatrix();
 }
