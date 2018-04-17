@@ -48,6 +48,7 @@ Display::create(int argc, char ** argv) {
     glShadeModel(GL_SMOOTH);
 
     // set up lighting
+    /*
     glEnable(GL_LIGHTING);
     // set up light 0
     float ambient[] = {0.15, 0.15, 0.15, 1.0}; // default is dim white
@@ -59,6 +60,7 @@ Display::create(int argc, char ** argv) {
     glLightfv(GL_LIGHT0, GL_POSITION, position);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
+    */
 }
 
 void
@@ -84,7 +86,9 @@ Display::redraw() {
 
 void
 Display::postdraw() {
+    glFlush();
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 void

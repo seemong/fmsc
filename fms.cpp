@@ -53,7 +53,8 @@ redraw(Display * display, void * arg) {
     cout << "redraw " << i << "\n";
 }
 
-int main(int argc, char * argv[]) {
+int
+main(int argc, char * argv[]) {
 #if 0
     cout << "Hello world!\n";
 
@@ -69,6 +70,8 @@ int main(int argc, char * argv[]) {
     d->set_redraw(redraw, 0);
     d->set_ortho(-4, -4, 4, 4, 0.1, 10);
 
+    glutMainLoop();
+    
     for(;;) {
         d->do_event();
     }
