@@ -65,6 +65,7 @@ Display::set_redraw(void (*redraw)(Display *, void *), void * arg) {
 
 void
 Display::predraw() {
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 }
 
 void
@@ -74,6 +75,7 @@ Display::redraw() {
 
 void
 Display::postdraw() {
+    glutSwapBuffers();
 }
 
 void
@@ -102,4 +104,6 @@ Display::lookAt(float eyex, float eyey, float eyez,
 
 void
 Display::set_position(float x, float y, float z, float w) {
+    GLfloat position[] = { x, y, z, w };
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
 }
