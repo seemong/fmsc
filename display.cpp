@@ -36,17 +36,18 @@ void
 Display::create(int argc, char ** argv) {
     // create window
     glutInit(&argc, (char **) &argv);
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
     glutCreateWindow(_name.c_str());
     glutInitWindowSize(_width, _height);
     glutInitWindowPosition(_x, _y);
     glutDisplayFunc(redraw_all);
 
     // set window properties
+    /*
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glShadeModel(GL_SMOOTH);
-
+    */
     // set up lighting
     /*
     glEnable(GL_LIGHTING);
@@ -77,6 +78,8 @@ Display::set_redraw(void (*redraw)(Display *, void *), void * arg) {
 void
 Display::predraw() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 void
@@ -86,7 +89,6 @@ Display::redraw() {
 
 void
 Display::postdraw() {
-    glFlush();
     glutSwapBuffers();
     glutPostRedisplay();
 }
@@ -129,4 +131,6 @@ Display::draw_solid_sphere(float radius, int slices, int stacks,
     glTranslatef(x, y, z);
     glutSolidSphere(radius, slices, stacks);
     glPopMatrix();
+
+    cout << "Drew sphere\n";
 }

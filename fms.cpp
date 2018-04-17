@@ -70,8 +70,6 @@ main(int argc, char * argv[]) {
     d->set_redraw(redraw, 0);
     d->set_ortho(-4, -4, 4, 4, 0.1, 10);
 
-    glutMainLoop();
-    
     for(;;) {
         d->do_event();
     }
