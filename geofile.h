@@ -8,7 +8,9 @@
 #define GEOFILE_H
 
 #include <string>
-#include <gdal.h>
+#include <gdal/gdal.h>
+#include <gdal/gdal_priv.h>
+using namespace std;
 
 /**
  * GeoFile is a class that defines a TIF or HGT files with helpfu;
@@ -20,16 +22,24 @@ protected:
     string _filename;
     int _rows;
     int _cols;
+    int _bands;
     float _left;
     float _right;
     float _top;
     float _bottom;
     float _xincrement;
     float _yincrement;
+    GDALDataset * _dataset;
+    float * _raster;
+
+    /**
+     * Single initialization of GeoFile class
+     */
+    static void init();
 
 public:
     GeoFile(string filename);
-    ~GeoFile();
+    virtual ~GeoFile();
 
     inline string get_filename() {
         return _filename;
@@ -66,6 +76,11 @@ public:
     inline float get_yincrement() {
         return _yincrement;
     }
+
+    /**
+     * Read a slice of data at xoff, yoff of the given number of cols and rows
+     */
+    float * read_data(int xoff, int yoff, int xsize, int ysize);
 };
 
 #endif

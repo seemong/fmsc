@@ -5,6 +5,7 @@
 #include <time.h>
 #include "mapobject.h"
 #include "display.h"
+#include "geofile.h"
 
 
 int streamFile(char *filename) {
@@ -79,6 +80,7 @@ main(int argc, char * argv[]) {
     cout << "Streaming  " << argv[1] << "\n";
     streamFile(argv[1]);
 #endif
+#if 0
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
     display->set_redraw(redraw, 0);
@@ -97,4 +99,12 @@ main(int argc, char * argv[]) {
         cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
+#endif
+    GeoFile * g = new GeoFile(argv[1]);
+    float * data = g->read_data(0, 0, 10, 10);
+    for(int i = 0; i < 100; i++)
+        cout << data[i] << " ";
+    cout << "\n";
+    delete data;
+    delete g;
 }
