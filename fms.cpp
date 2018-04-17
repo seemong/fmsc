@@ -45,6 +45,14 @@ int streamFile(char *filename) {
     }
 }
 
+void
+redraw(Display * display, void * arg) {
+    static int i = 0;
+
+    display->draw_solid_sphere(3, 10, 10, 0, 0, 0, 1, 0, 0);
+    cout << "redraw " << i << "\n";
+}
+
 int main(int argc, char * argv[]) {
 #if 0
     cout << "Hello world!\n";
@@ -58,5 +66,10 @@ int main(int argc, char * argv[]) {
 #endif
     Display * d = new Display("the display", 0, 0, 800, 800);
     d->create(argc, argv);
-    for(;;);
+    d->set_redraw(redraw, 0);
+    d->set_ortho(-4, -4, 4, 4, 0.1, 10);
+
+    for(;;) {
+        d->do_event();
+    }
 }

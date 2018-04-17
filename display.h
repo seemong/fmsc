@@ -61,6 +61,11 @@ public:
     void create(int argc, char ** argv);
 
     /**
+     * Do one loops worth of events
+     */
+    void do_event();
+
+    /**
      * Set the redraw function for this display
      */
     void set_redraw(void (*redraw)(Display *, void *), void * arg);
@@ -87,6 +92,12 @@ public:
      * Set light position
      */
     void set_position(float x, float y, float z, float w);
+
+    /**
+     * Draw a solid sphere
+     */
+    void draw_solid_sphere(float radius, int slices, int stacks,
+        float x, float y, float z, float r, float g, float b);
 };
 
 #endif // DISPLAY_H
