@@ -2,6 +2,7 @@
 #include <libxml/xmlreader.h>
 #include <cstring>
 #include <math.h>
+#include <time.h>
 #include "mapobject.h"
 #include "display.h"
 
@@ -58,7 +59,6 @@ redraw(Display * display, void * arg) {
     display->lookAt(x, y, 10, 0, 0, 0, 0, 1, 0);
     theta += 0.1;
     display->draw_solid_sphere(3, 10, 10, 0, 0, 0, 1, 0, 0);
-    cout << "redraw " << i++ << "\n";
 }
 
 int
@@ -79,11 +79,16 @@ main(int argc, char * argv[]) {
     display->set_light_position(5, 5, 0, 0);
     display->set_perspective(90, 1, 0.001, 500);
 
+    clock_t t = clock();
     for(;;) {
 
         // d->set_light_position(eyex, eyey, 0, 0);
 
         display->do_event();
         display->post_redisplay();
+
+        clock_t t_new = clock();
+        cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC << "\n";
+        t = t_new;
     }
 }
