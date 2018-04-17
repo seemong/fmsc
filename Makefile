@@ -9,7 +9,7 @@ OBJECTS = \
 
 CFLAGS = -g -I/usr/include/libxml2
 
-LIBS = -lxml2 -lGL -lglut
+LIBS = -lxml2 -lGL -lglut -lGLU
 
 fms: $(OBJECTS)
 	g++ $(OBJECTS) $(LIBS) $(CFLAGS) -o fms

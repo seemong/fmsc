@@ -68,12 +68,13 @@ public:
     /**
      * Set orthographic projection
      */
-    void set_ortho(int x, int y, int width, int height);
+    void set_ortho(float left, float right,
+        float bottom, float top, float near, float far);
 
     /**
      * Set perspective
      */
-    void set_perspective(float fov, float aspect, float zNear, float zFar);
+    void set_perspective(float fovy, float aspect, float zNear, float zFar);
 
     /**
      * Set eye location

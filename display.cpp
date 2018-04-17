@@ -77,18 +77,27 @@ Display::postdraw() {
 }
 
 void
-Display::set_ortho(int x, int y, int width, int height) {
+Display::set_ortho(float left, float right,
+    float bottom, float top, float near, float far) {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(left, right, bottom, top, near, far);
 }
 
-
 void
-Display::set_perspective(float fov, float aspect, float zNear, float zFar) {
+Display::set_perspective(float fovy, float aspect, float zNear, float zFar) {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(fovy, aspect, zNear, zFar);
 }
 
 void
 Display::lookAt(float eyex, float eyey, float eyez,
     float centerx, float centery, float centerz,
     float upx, float upy, float upz) {
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(eyex, eyey, eyez,centerx, centery, centerz, upx, upy, upz) ;
 }
 
 void
