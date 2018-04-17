@@ -7,7 +7,5 @@
 #include "geometry.h"
 
 ostream& operator <<(ostream& outputStream, const Coord& c) {
-    outputStream << "(" << c.get_x() << ", " << c.get_y() << ", "
-        << c.get_z() << ")";
+    outputStream << "(" << c.get_filename() << ")";
 }
-
