@@ -1,6 +1,7 @@
 #include <iostream>
 #include <libxml/xmlreader.h>
 #include <cstring>
+#include <math.h>
 #include "mapobject.h"
 #include "display.h"
 
@@ -48,9 +49,16 @@ int streamFile(char *filename) {
 void
 redraw(Display * display, void * arg) {
     static int i = 0;
+    static float radius = 10;
+    static float theta = 0;
+    static float z = 50;
 
+    float x = radius * cos(theta);
+    float y = radius * sin(theta);
+    display->lookAt(x, y, 10, 0, 0, 0, 0, 1, 0);
+    theta += 0.1;
     display->draw_solid_sphere(3, 10, 10, 0, 0, 0, 1, 0, 0);
-    cout << "redraw " << i << "\n";
+    cout << "redraw " << i++ << "\n";
 }
 
 int
@@ -65,12 +73,17 @@ main(int argc, char * argv[]) {
     cout << "Streaming  " << argv[1] << "\n";
     streamFile(argv[1]);
 #endif
-    Display * d = new Display("the display", 0, 0, 800, 800);
-    d->create(argc, argv);
-    d->set_redraw(redraw, 0);
-    d->set_ortho(-4, -4, 4, 4, 0.1, 10);
+    Display * display = new Display("the display", 0, 0, 800, 800);
+    display->create(argc, argv);
+    display->set_redraw(redraw, 0);
+    display->set_light_position(5, 5, 0, 0);
+    display->set_perspective(90, 1, 0.001, 500);
 
     for(;;) {
-        d->do_event();
+
+        // d->set_light_position(eyex, eyey, 0, 0);
+
+        display->do_event();
+        display->post_redisplay();
     }
 }

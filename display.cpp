@@ -5,7 +5,6 @@
  */
 
 #include <GL/freeglut.h>
-#include <iostream>
 #include "display.h"
 
 // The list of displays
@@ -22,14 +21,12 @@ Display::~Display() {
 
 void
 Display::redraw_all() {
-    cout << "redrawing_all\n";
     for(list<Display *>::iterator it = _displays.begin();
         it != _displays.end(); it++) {
         (*it)->predraw();
         (*it)->redraw();
         (*it)->postdraw();
     }
-    cout << "ending redrawing_all\n";
 }
 
 void
@@ -37,19 +34,16 @@ Display::create(int argc, char ** argv) {
     // create window
     glutInit(&argc, (char **) &argv);
     glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
-    glutCreateWindow(_name.c_str());
     glutInitWindowSize(_width, _height);
     glutInitWindowPosition(_x, _y);
+    glutCreateWindow(_name.c_str());
     glutDisplayFunc(redraw_all);
 
     // set window properties
-    /*
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glShadeModel(GL_SMOOTH);
-    */
     // set up lighting
-    /*
     glEnable(GL_LIGHTING);
     // set up light 0
     float ambient[] = {0.15, 0.15, 0.15, 1.0}; // default is dim white
@@ -61,12 +55,16 @@ Display::create(int argc, char ** argv) {
     glLightfv(GL_LIGHT0, GL_POSITION, position);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
-    */
 }
 
 void
 Display::do_event() {
     glutMainLoopEvent();
+}
+
+void
+Display::post_redisplay() {
+    glutPostRedisplay();
 }
 
 void
@@ -90,7 +88,6 @@ Display::redraw() {
 void
 Display::postdraw() {
     glutSwapBuffers();
-    glutPostRedisplay();
 }
 
 void
@@ -114,11 +111,11 @@ Display::lookAt(float eyex, float eyey, float eyez,
     float upx, float upy, float upz) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(eyex, eyey, eyez,centerx, centery, centerz, upx, upy, upz) ;
+    gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz) ;
 }
 
 void
-Display::set_position(float x, float y, float z, float w) {
+Display::set_light_position(float x, float y, float z, float w) {
     GLfloat position[] = { x, y, z, w };
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 }
@@ -131,6 +128,4 @@ Display::draw_solid_sphere(float radius, int slices, int stacks,
     glTranslatef(x, y, z);
     glutSolidSphere(radius, slices, stacks);
     glPopMatrix();
-
-    cout << "Drew sphere\n";
 }

@@ -66,6 +66,11 @@ public:
     void do_event();
 
     /**
+     * Post a redisplay request
+     */
+    void post_redisplay();
+
+    /**
      * Set the redraw function for this display
      */
     void set_redraw(void (*redraw)(Display *, void *), void * arg);
@@ -91,7 +96,7 @@ public:
     /**
      * Set light position
      */
-    void set_position(float x, float y, float z, float w);
+    void set_light_position(float x, float y, float z, float w);
 
     /**
      * Draw a solid sphere

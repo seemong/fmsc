@@ -4,6 +4,8 @@ OBJECTS = \
 	mapobject.o \
 	fms.o
 
+TARGET = fms
+
 .cpp.o:
 	g++ -c $(CFLAGS) $< -o $@
 
@@ -11,7 +13,7 @@ CFLAGS = -g -I/usr/include/libxml2
 
 LIBS = -lxml2 -lGL -lglut -lGLU
 
-fms: $(OBJECTS)
+$(TARGET): $(OBJECTS)
 	g++ $(OBJECTS) $(LIBS) $(CFLAGS) -o fms
 
 fms.o: fms.cpp geometry.h mapobject.h display.h
@@ -23,4 +25,4 @@ mapobject.o: geometry.h mapobject.cpp
 display.o: display.h display.cpp
 
 clean:
-	rm $(objects) runfms
+	rm $(OBJECTS) $(TARGET)
