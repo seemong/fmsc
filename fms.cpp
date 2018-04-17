@@ -1,8 +1,8 @@
 #include <iostream>
 #include <libxml/xmlreader.h>
 #include <cstring>
-#include "geometry/mapobject.h"
-#include "display/display.h"
+#include "mapobject.h"
+#include "display.h"
 
 
 int streamFile(char *filename) {
@@ -17,7 +17,7 @@ int streamFile(char *filename) {
             // process the node here
             int nodeType = xmlTextReaderNodeType(reader);
             char * name = (char *) xmlTextReaderName(reader);
-            
+
             if (nodeType == XML_READER_TYPE_ELEMENT &&
                 strcmp("node", name) == 0) {
                 cout << "Node starts\n";
@@ -31,9 +31,9 @@ int streamFile(char *filename) {
                 strcmp("way", name) == 0) {
                 cout << "Way ends\n";
             }
-            
+
             xmlFree(name);
-            
+
             ret = xmlTextReaderRead(reader);
         }
         xmlFreeTextReader(reader);
@@ -48,11 +48,11 @@ int streamFile(char *filename) {
 int main(int argc, char * argv[]) {
 #if 0
     cout << "Hello world!\n";
-    
+
     Map * m = Map::make_map("the-map", "rainier");
     cout << *m << "\n";
     delete m;
-    
+
     cout << "Streaming  " << argv[1] << "\n";
     streamFile(argv[1]);
 #endif

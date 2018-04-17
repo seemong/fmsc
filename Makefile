@@ -5,20 +5,22 @@ OBJECTS = \
 	fms/fms.o
 
 .cpp.o:
-	g++ -c -I . -I /usr/include/libxml2  $< -o $@
-	
+	g++ -c $(CFLAGS) $< -o $@
+
+CFLAGS = -g
+
 LIBS = -lxml2 -lGL -lglut
 
-runfms: $(OBJECTS)
-	g++ $(OBJECTS) $(LIBS) -o runfms 
+fms: $(OBJECTS)
+	g++ $(OBJECTS) $(LIBS) $(CFLAGS) -o fms
 
-fms/fms.o: fms/fms.cpp geometry/geometry.h geometry/mapobject.h
+fms.o: fms.cpp geometry.h mapobject.h display.h
 
-geometry/geometry.o: geometry/geometry.h geometry/geometry.cpp
+geometry.o: geometry.h geometry.cpp
 
-geometry/mapobject.o: geometry/geometry.h geometry/mapobject.cpp
+mapobject.o: geometry.h mapobject.cpp
 
-display/display.o: display/display.h display/display.cpp
+display.o: display.h display.cpp
 
-clean: 
+clean:
 	rm $(objects) runfms
