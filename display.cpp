@@ -154,8 +154,8 @@ Display::draw_wire_sphere(float radius, int slices, int stacks,
 }
 
 void
-Display::draw_vertices(float * vertices, float * indices, float * normals,
-    float * color, int size, string draw_type) {
+Display::draw_vertices(float * vertices, float * indices, 
+    float * normals, float * color, int size, string draw_type) {
     glColor(color);
     glLineWidth(size);
     glEnableClientState(GL_VERTEX_ARRAY);
