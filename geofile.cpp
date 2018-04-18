@@ -45,13 +45,13 @@ GeoFile::~GeoFile() {
 }
 
 
-float *
+shared_ptr<float>
 GeoFile::read_data(int xoff, int yoff, int xsize, int ysize) {
-    float * data = new float[xsize * ysize];
+    shared_ptr<float> data(new float[xsize * ysize]);
     GDALRasterBand * band = _dataset->GetRasterBand(1);
     for(int row = 0; row < ysize; row++) {
         CPLErr err = band->RasterIO(GF_Read, xoff, yoff, xsize, ysize,
-            data, xsize, ysize, GDT_Float32, 0, 0);
+            data.get(), xsize, ysize, GDT_Float32, 0, 0);
         assert(err == CE_None);
     }
     return data;

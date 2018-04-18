@@ -10,6 +10,7 @@
 #include <string>
 #include <gdal/gdal.h>
 #include <gdal/gdal_priv.h>
+#include <memory>
 using namespace std;
 
 /**
@@ -78,9 +79,12 @@ public:
     }
 
     /**
-     * Read a slice of data at xoff, yoff of the given number of cols and rows
+     * Read a slice of data at xoff, yoff of the given number of 
+     * cols and rows. Returns a ref counted shared pointer to
+     * a float array that is constructed to hold the data
      */
-    float * read_data(int xoff, int yoff, int xsize, int ysize);
+    shared_ptr<float> read_data(int xoff, int yoff, 
+        int xsize, int ysize);
 };
 
 #endif

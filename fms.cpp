@@ -3,6 +3,7 @@
 #include <cstring>
 #include <math.h>
 #include <time.h>
+#include <memory>
 #include "mapobject.h"
 #include "display.h"
 #include "geofile.h"
@@ -100,11 +101,9 @@ main(int argc, char * argv[]) {
         t = t_new;
     }
 #endif
-    GeoFile * g = new GeoFile(argv[1]);
-    float * data = g->read_data(0, 0, 10, 10);
+    shared_ptr<GeoFile> g(new GeoFile(argv[1]));
+    shared_ptr<float> data = g->read_data(0, 0, 10, 10);
     for(int i = 0; i < 100; i++)
-        cout << data[i] << " ";
+        cout << data.get()[i] << " ";
     cout << "\n";
-    delete data;
-    delete g;
 }
