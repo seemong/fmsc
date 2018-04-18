@@ -105,4 +105,6 @@ public:
         float top);
 };
 
+shared_ptr<int> make_mesh_indices(int xsize, int ysize);
+
 #endif

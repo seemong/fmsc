@@ -87,3 +87,17 @@ GeoFile::get_tile(float left, float bottom, float right, float top) {
     int ysize = (top - bottom)/_yincrement;
     return read_data_as_tile(xoff, yoff, xsize, ysize);
 }
+
+shared_ptr<int>
+make_mesh_indices(int xsize, int ysize) {
+    xcount = 2 + (xsize - 2) * 2;
+    ycount = 2 + (ysize - 2) * 2;
+    shared_ptr<int> indices(new int[xcount * ycount * 2]);
+    
+    // do east west lines
+    int i = 0
+
+    // do north south lines
+    
+    return indices;
+}
