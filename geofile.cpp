@@ -75,11 +75,11 @@ GeoFile::read_data_as_tile(int xoff, int yoff,
             vertex_data.get()[vertex_index + 2] = z;
         }
     }
-    return GeoTile(xsize, ysize, boxleft, boxbottom, boxright, boxtop, 
+    return GeoTile(xsize, ysize, boxleft, boxbottom, boxright, boxtop,
         vertex_data);
 }
 
-GeoTile 
+GeoTile
 GeoFile::get_tile(float left, float bottom, float right, float top) {
     int xoff = (left - _left)/_xincrement;
     int yoff = (_top - top)/_yincrement;
@@ -90,14 +90,30 @@ GeoFile::get_tile(float left, float bottom, float right, float top) {
 
 shared_ptr<int>
 make_mesh_indices(int xsize, int ysize) {
-    xcount = 2 + (xsize - 2) * 2;
-    ycount = 2 + (ysize - 2) * 2;
-    shared_ptr<int> indices(new int[xcount * ycount * 2]);
-    
+    int east_west_count = (2 * (xsize - 1)) * ysize;
+    int north_south_count = (2 * (ysize - 1)) * xsize;
+    shared_ptr<int> indices(new int[east_west_count + north_south_count]);
+
     // do east west lines
-    int i = 0
+    int i = 0;
+    for(int row = 0; row < ysize; row++) {
+        indices.get()[i++] = row * xsize;
+        for(int col = 1; col < xsize - 1; col++) {
+            indices.get()[i++] = col + row * xsize;
+            indices.get()[i++] = col + row * xsize;
+        }
+        indices.get()[i++] = xsize - 1 + row * xsize;
+    }
 
     // do north south lines
-    
+    for(int col = 0; col < xsize; col++) {
+        indices.get()[i++] = col + xsize;
+        for(int row = 1; row < ysize - 1; row++) {
+            indices.get()[i++] = col + row * xsize;
+            indices.get()[i++] = col + row * xsize;
+        }
+        indices.get()[i++] = col + (ysize - 1) * xsize;
+    }
+
     return indices;
 }

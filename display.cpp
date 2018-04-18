@@ -152,3 +152,59 @@ Display::draw_wire_sphere(float radius, int slices, int stacks,
     glutWireSphere(radius, slices, stacks);
     glPopMatrix();
 }
+
+void
+Display::draw_vertices(float * vertices, float * indices, float * normals,
+    float * color, int size, string draw_type) {
+    glColor(color);
+    glLineWidth(size);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    // setup vertices
+    vbo = Display.make_vbo(vertices)
+    vbo.bind()
+    glVertexPointerf(vbo)
+
+    // setup normals
+    glEnableClientState(GL_NORMAL_ARRAY);
+    vbonorm = Display.make_vbo(normals)
+    vbonorm.bind();
+    glNormalPointerf(vbonorm)
+
+    indices = Display.make_numpy_indices(indices)
+    if (draw_type == "triangles") {
+       glDrawElements(GL_TRIANGLES, len(indices), GL_UNSIGNED_INT,
+           indices.tostring());
+    else if (draw_type == "lines") {}
+       glDrawElements(GL_LINES, len(indices), GL_UNSIGNED_INT,
+           indices.tostring());
+    else if (draw_type == "triangle_strip") {}
+       glDrawElements(GL_TRIANGLE_STRIP, len(indices), GL_UNSIGNED_INT,
+           indices.tostring());
+
+    // clean up
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+}
+
+void
+VBO::VBO(int size, shared_ptr<float> data, string data_type) : _size(size), _data(data) {
+    glBenBuffers(1, &_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    glBufferData(GL_ARRAY_BUFFER, _size, _data, GL_STATIC_DRAW);
+}
+
+void
+VBO::~VDO() {
+    glDeleteBuffers(1, &_vbo);
+}
+
+void
+VBO::bind() {
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+}
+
+void
+VBO::unbind() {
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}

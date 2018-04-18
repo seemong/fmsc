@@ -48,6 +48,12 @@ protected:
      */
     virtual void redraw();
 
+    /**
+     * Draw a set of vertices
+     */
+    void draw_vertices(float * vertices, float * indices, float * normals,
+        float * color, int size, string type);
+
 public:
     /**
      * Construct a display object with name, position and size
@@ -115,6 +121,42 @@ public:
      */
     void draw_solid_cube(float size, float x, float y, float z,
         float r, float g, float b);
+
+    /**
+     * Draw a set of lines
+     */
+    void draw_lines(float * vertices, float * indices,
+        float * normals, float * color, int size);
+};
+
+/**
+ * VBO is a vertex buffer object that hides the complexity of OpenGL
+ * vertex buffers
+ */
+class VBO {
+protected:
+    int size;
+    shared_ptr<float> _data;
+
+    GLUint _vbo;
+
+public:
+    VBO(int size, shared_ptr<float> data);
+    ~VBO();
+
+    inline int get_size() { return _size; }
+    inline shared_ptr<float> get_data() { return _data; }
+    inline int get_vbo() { return _vbo; }
+
+    /**
+     * Bind the data and upload it to the video card
+     */
+    void bind();
+
+    /**
+     * unbind
+     */
+    void unbind();
 };
 
 #endif // DISPLAY_H

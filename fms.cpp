@@ -81,12 +81,17 @@ main(int argc, char * argv[]) {
     cout << "Streaming  " << argv[1] << "\n";
     streamFile(argv[1]);
 #endif
-#if 0
+
+    shared_ptr<GeoFile> g(new GeoFile(argv[1]));
+    GeoTile tile = g->read_data_as_tile(0, 0, 10, 2);
+    shared_ptr<int> indices = make_mesh_indices(tile.get_xsize(), tile.get_ysize());
+
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
     display->set_redraw(redraw, 0);
-    display->set_perspective(90, 1, 0.001, 500);
-    display->set_light_position(5, 5, 0, 0);
+    // display->set_perspective(90, 1, 0.001, 500);
+    display.set_ortho(tile.get_left(), tile.get_right(), tile.get_bottom, tile.get_top(), -5000, 5000);
+    display->set_light_position(5, 5, 5, 0);
 
     clock_t t = clock();
     for(;;) {
@@ -99,16 +104,5 @@ main(int argc, char * argv[]) {
         clock_t t_new = clock();
         cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
-    }
-#endif
-    shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 10, 2);
-    for(int y = 0; y < 2; y++) {
-        for(int x = 0; x < 10; x++) {
-            float * v = tile.get_vertex(x, y);
-            cout << "(" << v[0] << ", " << v[1] << ", " << v[2] 
-                << ") ";
-        }
-        cout << "\n";
     }
 }
