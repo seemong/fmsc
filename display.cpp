@@ -188,8 +188,9 @@ Display::draw_vertices(float * vertices, float * indices, float * normals,
 }
 
 void
-VBO::VBO(int size, shared_ptr<float> data, string data_type) : _size(size), _data(data) {
-    glBenBuffers(1, &_vbo);
+VBO::VBO(int size, shared_ptr<float> data, string data_type) : 
+    _size(size), _data(data) {
+    glGenBuffers(1, &_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, _size, _data, GL_STATIC_DRAW);
 }
