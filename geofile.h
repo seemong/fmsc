@@ -14,6 +14,39 @@
 using namespace std;
 
 /**
+ *  GeoTile represents a slice of vertex data read from a GeoFile
+ */
+class GeoTile {
+protected:
+    int _xsize;
+    int _ysize;
+    float _left;
+    float _bottom;
+    float _right;
+    float _top;
+    shared_ptr<float> _data;
+
+public:
+    GeoTile(int xsize, int ysize, float left, float bottom,
+        float right, float top, shared_ptr<float> data) :
+        _xsize(xsize), _ysize(ysize), _left(left), _bottom(bottom),
+        _right(right), _top(top), _data(data){
+    }
+        
+    inline int get_xsize() { return _xsize; }
+    inline int get_ysize() { return _ysize; }
+    inline float get_left() { return _left; }
+    inline float get_bottom() { return _bottom; }
+    inline float get_right() { return _right; }
+    inline float get_top() { return _top; }  
+    inline shared_ptr<float> get_data() { return _data; }
+    
+    inline float * get_vertex(int xoff, int yoff) {
+        return _data.get() + (xoff + yoff * _xsize) * 3;
+    }
+};
+
+/**
  * GeoFile is a class that defines a TIF or HGT files with helpfu;
  * methods to generate mesh vertices from the data, and to get slices
  * of the data based on elat/lon bounding boxes
@@ -31,8 +64,7 @@ protected:
     float _xincrement;
     float _yincrement;
     GDALDataset * _dataset;
-    float * _raster;
-
+    
     /**
      * Single initialization of GeoFile class
      */
@@ -42,41 +74,15 @@ public:
     GeoFile(string filename);
     virtual ~GeoFile();
 
-    inline string get_filename() {
-        return _filename;
-    }
-
-    inline int get_rows() {
-        return _rows;
-    }
-
-    inline int get_cols() {
-        return _cols;
-    }
-
-    inline float get_left() {
-        return _left;
-    }
-
-    inline float get_bottom() {
-        return _bottom;
-    }
-
-    inline float get_right() {
-        return _right;
-    }
-
-    inline float get_top() {
-        return _top;
-    }
-
-    inline float get_xincrement() {
-        return _xincrement;
-    }
-
-    inline float get_yincrement() {
-        return _yincrement;
-    }
+    inline string get_filename() { return _filename; }
+    inline int get_rows() { return _rows; }
+    inline int get_cols() { return _cols; }
+    inline float get_left() { return _left; }
+    inline float get_bottom() { return _bottom; }
+    inline float get_right() { return _right; }
+    inline float get_top() { return _top; }
+    inline float get_xincrement() {return _xincrement; }
+    inline float get_yincrement() {return _yincrement; }
 
     /**
      * Read a slice of data at xoff, yoff of the given number of 
@@ -85,6 +91,18 @@ public:
      */
     shared_ptr<float> read_data(int xoff, int yoff, 
         int xsize, int ysize);
+        
+    /**
+     * Read the data and return as vertices
+     */
+    GeoTile read_data_as_tile(int xoff, int yoff,
+        int xsize, int ysize);
+        
+    /**
+     *  Read the data in coodinates and return as a GeoTile
+     */
+    GeoTile get_tile(float left, float bottom, float right,
+        float top);
 };
 
 #endif
