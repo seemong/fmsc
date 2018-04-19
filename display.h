@@ -7,9 +7,10 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <list>
 #include <string>
+#include <memory>
 using namespace std;
 
 /**
@@ -135,21 +136,22 @@ public:
  */
 class VBO {
 protected:
-    int size;
-    shared_ptr<float> _data;
-
-    GLUint _vbo;
+    int _size;
+    string _type;
+    GLuint _vbo;
+    
+    GLenum get_buffer_type();
 
 public:
-    VBO(int size, shared_ptr<float> data);
-    ~VBO();
+    VBO(int size, void * data, string type);
+     ~VBO();
 
     inline int get_size() { return _size; }
-    inline shared_ptr<float> get_data() { return _data; }
+    inline string get_type() { return _type; }
     inline int get_vbo() { return _vbo; }
 
     /**
-     * Bind the data and upload it to the video card
+     * Bind the data 
      */
     void bind();
 
@@ -158,5 +160,7 @@ public:
      */
     void unbind();
 };
+
+
 
 #endif // DISPLAY_H

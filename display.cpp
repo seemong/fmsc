@@ -5,6 +5,9 @@
  */
 
 #include <GL/freeglut.h>
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <cassert>
 #include "display.h"
 
 // The list of displays
@@ -156,7 +159,8 @@ Display::draw_wire_sphere(float radius, int slices, int stacks,
 void
 Display::draw_vertices(float * vertices, float * indices, 
     float * normals, float * color, int size, string draw_type) {
-    glColor(color);
+        /*
+    glColor3f(color);
     glLineWidth(size);
     glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -185,19 +189,29 @@ Display::draw_vertices(float * vertices, float * indices,
     // clean up
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
+    * */
 }
 
-void
-VBO::VBO(int size, shared_ptr<float> data, string data_type) : 
-    _size(size), _data(data) {
-    glGenBuffers(1, &_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    glBufferData(GL_ARRAY_BUFFER, _size, _data, GL_STATIC_DRAW);
+VBO::VBO(int size, void * data, string type) :
+    _size(size), _type(type) {
+    glGenBuffers( 1, &_vbo);
+    GLenum bt = get_buffer_type();
+    glBindBuffer(bt, _vbo);
+    glBufferData(bt, _size, data, GL_STATIC_DRAW);
 }
 
-void
-VBO::~VDO() {
+VBO::~VBO() {
     glDeleteBuffers(1, &_vbo);
+}
+
+GLenum
+VBO::get_buffer_type() {
+    if (_type == "vertex") 
+        return GL_ARRAY_BUFFER;
+    if (_type == "index")
+        return GL_ELEMENT_ARRAY_BUFFER;
+    assert(false);
+    return 0;
 }
 
 void
@@ -209,3 +223,4 @@ void
 VBO::unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+

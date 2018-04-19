@@ -114,6 +114,6 @@ shared_ptr<int> make_mesh_indices(int xsize, int ysize);
 /**
  * Make an array of normal pointers of size (xsize * ysize * 3) floats
  * for the given vertices with size xsize and ysize*/
-shared_ptr<float> make_normals(shared<ptr> vertices, int xsize, int ysize);
+shared_ptr<float> make_normals(shared_ptr<float> vertices, int xsize, int ysize);
 
-#endif
+#endif // GEOFILE_H

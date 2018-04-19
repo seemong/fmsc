@@ -10,7 +10,7 @@ TARGET = fms
 .cpp.o:
 	g++ -c $(CFLAGS) $< -o $@
 
-CFLAGS = -g -I/usr/include/libxml2
+CFLAGS = -g -I/usr/include/libxml2 -DGL_GLEXT_PROTOTYPES
 
 LIBS = -lxml2 -lGL -lglut -lGLU -lgdal
 
