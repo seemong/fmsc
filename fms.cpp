@@ -90,9 +90,11 @@ main(int argc, char * argv[]) {
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
     display->set_redraw(redraw, 0);
-    // display->set_perspective(90, 1, 0.001, 500);
+    display->set_perspective(90, 1, 0.001, 500);
+    /*
     display->set_ortho(tile.get_left(), tile.get_right(), 
         tile.get_bottom(), tile.get_top(), -5000, 5000);
+        */
     display->set_light_position(5, 5, 5, 0);
 
     clock_t t = clock();

@@ -35,7 +35,7 @@ Display::redraw_all() {
 void
 Display::create(int argc, char ** argv) {
     // create window
-    glutInit(&argc, (char **) &argv);
+    glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
     glutInitWindowSize(_width, _height);
     glutInitWindowPosition(_x, _y);
