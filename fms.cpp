@@ -4,9 +4,11 @@
 #include <math.h>
 #include <time.h>
 #include <memory>
+#include <stdio.h>
 #include "mapobject.h"
 #include "display.h"
 #include "geofile.h"
+#include "mesh.h"
 
 
 int streamFile(char *filename) {
@@ -51,12 +53,13 @@ int streamFile(char *filename) {
 
 void
 redraw(Display * display, void * arg) {
+    /*
     static int i = 0;
     static float radius = 20;
     static float theta = 0;
 
-    static float x = -30;
-    static float y = 90;
+    static float x = -50;
+    static float y = 100;
     static float z = 50;
     display->lookAt(x, y, z, 0, 0, 0, 0, 1, 0);
     theta += 0.1;
@@ -67,6 +70,8 @@ redraw(Display * display, void * arg) {
     display->draw_solid_sphere(3, 10, 10, -3, 0, 0, 1, 0, 0);
     display->draw_solid_cube(3, 3, 0, 0, 0, 1, 0);
     display->draw_wire_sphere(2, 10, 10, 0, -2, 0, 0, 0, 1);
+    */
+    Mesh * m = (Mesh *) arg;
 }
 
 int
@@ -83,18 +88,26 @@ main(int argc, char * argv[]) {
 #endif
 
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 10, 2);
-    shared_ptr<int> indices = make_mesh_indices(tile.get_xsize(), 
+    GeoTile tile = g->read_data_as_tile(0, 0, 5, 2);
+    shared_ptr<float> v = tile.get_vertices();
+    for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
+        printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
+    }
+    cout << "\n";
+    WireRectangleMesh mesh(v, tile.get_xsize(),
         tile.get_ysize());
+    shared_ptr<int> indices = mesh.get_indices();
+    for(int i = 0; i < mesh.get_number_of_indices(); i++) {
+        cout << indices.get()[i] << " ";
+    }
+    cout << "\n";
 
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
-    display->set_redraw(redraw, 0);
-    display->set_perspective(90, 1, 0.001, 500);
-    /*
+    display->set_redraw(redraw, &mesh);
+    // display->set_perspective(90, 1, 0.001, 500);
     display->set_ortho(tile.get_left(), tile.get_right(), 
         tile.get_bottom(), tile.get_top(), -5000, 5000);
-        */
     display->set_light_position(5, 5, 5, 0);
 
     clock_t t = clock();
@@ -106,7 +119,7 @@ main(int argc, char * argv[]) {
         display->post_redisplay();
 
         clock_t t_new = clock();
-        cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
+        // cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
 }

@@ -3,6 +3,7 @@ OBJECTS = \
 	geofile.o \
 	geometry.o \
 	mapobject.o \
+	mesh.o \
 	fms.o
 
 TARGET = fms
@@ -25,7 +26,9 @@ mapobject.o: geometry.h mapobject.cpp
 
 display.o: display.h display.cpp
 
-geofile.o: geofile.h geofile.cpp
+geofile.o: geofile.h geofile.cpp mesh.h
+
+mesh.o: mesh.h mesh.cpp
 
 clean:
 	rm $(OBJECTS) $(TARGET)

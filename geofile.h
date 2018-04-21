@@ -24,13 +24,13 @@ protected:
     float _bottom;
     float _right;
     float _top;
-    shared_ptr<float> _data;
+    shared_ptr<float> _vertices;
 
 public:
     GeoTile(int xsize, int ysize, float left, float bottom,
-        float right, float top, shared_ptr<float> data) :
+        float right, float top, shared_ptr<float> vertices) :
         _xsize(xsize), _ysize(ysize), _left(left), _bottom(bottom),
-        _right(right), _top(top), _data(data){
+        _right(right), _top(top), _vertices(vertices){
     }
 
     inline int get_xsize() { return _xsize; }
@@ -39,10 +39,10 @@ public:
     inline float get_bottom() { return _bottom; }
     inline float get_right() { return _right; }
     inline float get_top() { return _top; }
-    inline shared_ptr<float> get_data() { return _data; }
+    inline shared_ptr<float> get_vertices() { return _vertices; }
 
     inline float * get_vertex(int xoff, int yoff) {
-        return _data.get() + (xoff + yoff * _xsize) * 3;
+        return _vertices.get() + (xoff + yoff * _xsize) * 3;
     }
 };
 
@@ -104,16 +104,5 @@ public:
     GeoTile get_tile(float left, float bottom, float right,
         float top);
 };
-
-/**
- * Make a mesh of indices of the number of cols and rows
- * with east west lines and north south lines
- */
-shared_ptr<int> make_mesh_indices(int xsize, int ysize);
-
-/**
- * Make an array of normal pointers of size (xsize * ysize * 3) floats
- * for the given vertices with size xsize and ysize*/
-shared_ptr<float> make_normals(shared_ptr<float> vertices, int xsize, int ysize);
 
 #endif // GEOFILE_H
