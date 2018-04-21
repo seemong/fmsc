@@ -71,7 +71,16 @@ redraw(Display * display, void * arg) {
     display->draw_solid_cube(3, 3, 0, 0, 0, 1, 0);
     display->draw_wire_sphere(2, 10, 10, 0, -2, 0, 0, 0, 1);
     */
+    
     Mesh * m = (Mesh *) arg;
+    shared_ptr<float> vertices = m->get_vertices();
+    int num_vertices = m->get_number_of_vertices();
+    shared_ptr<float> normals = m->get_normals();
+    shared_ptr<int> indices = m->get_indices();
+    int num_indices = m->get_number_of_indices();
+    
+    display->draw_lines(vertices, num_vertices, indices, num_indices,
+        normals, 1, 0, 0, 2);
 }
 
 int
@@ -88,19 +97,28 @@ main(int argc, char * argv[]) {
 #endif
 
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 5, 2);
+    GeoTile tile = g->read_data_as_tile(0, 0, 5, 3);
     shared_ptr<float> v = tile.get_vertices();
     for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
         printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
     }
     cout << "\n";
+    
     WireRectangleMesh mesh(v, tile.get_xsize(),
         tile.get_ysize());
-    shared_ptr<int> indices = mesh.get_indices();
+    shared_ptr<int> in = mesh.get_indices();
+    printf("Indices:\n");
     for(int i = 0; i < mesh.get_number_of_indices(); i++) {
-        cout << indices.get()[i] << " ";
+        printf("(%d) ", in.get()[i]);
     }
-    cout << "\n";
+    printf("\n");
+    
+    printf("Normals:\n");
+    shared_ptr<float> n = mesh.get_normals();
+    for(int i = 0; i < mesh.get_number_of_normals(); i++) {
+        printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
+    }
+    printf("\n");
 
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
@@ -119,7 +137,7 @@ main(int argc, char * argv[]) {
         display->post_redisplay();
 
         clock_t t_new = clock();
-        // cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
+        cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
 }

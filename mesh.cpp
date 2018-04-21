@@ -66,10 +66,10 @@ void get_neighbors(float * vertices, int xoff, int yoff,
         n2_x = xoff - 1;
 
     int v1off = n1_x + n1_y * xsize;
-    *v1 = &vertices[v1off];
+    *v1 = &vertices[3 * v1off];
     
     int v2off = n2_x + n2_y * xsize;
-    *v2 = &vertices[v2off];
+    *v2 = &vertices[3 * v2off];
 }
     
 void
@@ -77,7 +77,7 @@ RectangleMesh::make_normals() {
     _normals = shared_ptr<float>(new float[_number_of_vertices * 3]);
     for(int yoff = 0; yoff < _ysize; yoff++) { 
         for(int xoff = 0; xoff < _xsize; xoff++) { 
-            float * coord = &_vertices.get()[xoff + yoff * _xsize];
+            float * coord = &_vertices.get()[3 * (xoff + yoff * _xsize)];
         
             float * v1, * v2;
             get_neighbors(_vertices.get(), xoff, yoff, _xsize, _ysize, 
@@ -93,7 +93,7 @@ RectangleMesh::make_normals() {
             float norm[3];
             normalize(cp, norm);
             
-            int offset = xoff + yoff * _xsize;
+            int offset = 3 * (xoff + yoff * _xsize);
             if (norm[2] >= 0) {
                 _normals.get()[offset] = norm[0];
                 _normals.get()[offset+1] = norm[1];

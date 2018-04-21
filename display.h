@@ -126,8 +126,10 @@ public:
     /**
      * Draw a set of lines
      */
-    void draw_lines(float * vertices, float * indices,
-        float * normals, float * color, int size);
+    void draw_lines(shared_ptr<float> vertices, int num_vertices,
+        shared_ptr<int> indices, int num_indices,
+        shared_ptr<float> normals, float r, float g, float b,
+        int line_size);
 };
 
 /**
@@ -136,18 +138,16 @@ public:
  */
 class VBO {
 protected:
+    shared_ptr<float> _data;
     int _size;
-    string _type;
     GLuint _vbo;
-    
-    GLenum get_buffer_type();
 
 public:
-    VBO(int size, void * data, string type);
+    VBO(shared_ptr<float> data, int size);
      ~VBO();
 
+    inline shared_ptr<float> get_data() { return _data; }
     inline int get_size() { return _size; }
-    inline string get_type() { return _type; }
     inline int get_vbo() { return _vbo; }
 
     /**

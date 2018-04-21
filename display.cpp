@@ -157,61 +157,40 @@ Display::draw_wire_sphere(float radius, int slices, int stacks,
 }
 
 void
-Display::draw_vertices(float * vertices, float * indices, 
-    float * normals, float * color, int size, string draw_type) {
-        /*
-    glColor3f(color);
-    glLineWidth(size);
+Display::draw_lines(shared_ptr<float> vertices, int num_vertices,
+        shared_ptr<int> indices, int num_indices,
+        shared_ptr<float> normals, float r, float g, float b,
+        int line_size) {
+    glColor3f(r, g, b);
+    glLineWidth(line_size);
     glEnableClientState(GL_VERTEX_ARRAY);
 
     // setup vertices
-    vbo = Display.make_vbo(vertices)
-    vbo.bind()
-    glVertexPointerf(vbo)
+    // VBO vbo(vertices, num_vertices * 3);
+    glVertexPointer(3, GL_FLOAT, 0, vertices.get());
 
     // setup normals
     glEnableClientState(GL_NORMAL_ARRAY);
-    vbonorm = Display.make_vbo(normals)
-    vbonorm.bind();
-    glNormalPointerf(vbonorm)
+    // VBO vbonorm(normals, num_vertices * 3);
+    glNormalPointer(GL_FLOAT, 0, normals.get());
 
-    indices = Display.make_numpy_indices(indices)
-    if (draw_type == "triangles") {
-       glDrawElements(GL_TRIANGLES, len(indices), GL_UNSIGNED_INT,
-           indices.tostring());
-    else if (draw_type == "lines") {}
-       glDrawElements(GL_LINES, len(indices), GL_UNSIGNED_INT,
-           indices.tostring());
-    else if (draw_type == "triangle_strip") {}
-       glDrawElements(GL_TRIANGLE_STRIP, len(indices), GL_UNSIGNED_INT,
-           indices.tostring());
-
+    glDrawElements(GL_LINES, num_indices, GL_UNSIGNED_INT,
+           indices.get());
+ 
     // clean up
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    * */
 }
 
-VBO::VBO(int size, void * data, string type) :
-    _size(size), _type(type) {
-    glGenBuffers( 1, &_vbo);
-    GLenum bt = get_buffer_type();
-    glBindBuffer(bt, _vbo);
-    glBufferData(bt, _size, data, GL_STATIC_DRAW);
+VBO::VBO(shared_ptr<float> data, int size) :
+    _data(data), _size(size) {
+    glGenBuffers(1, &_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    glBufferData(GL_ARRAY_BUFFER, _size, _data.get(), GL_STATIC_DRAW);
 }
 
 VBO::~VBO() {
     glDeleteBuffers(1, &_vbo);
-}
-
-GLenum
-VBO::get_buffer_type() {
-    if (_type == "vertex") 
-        return GL_ARRAY_BUFFER;
-    if (_type == "index")
-        return GL_ELEMENT_ARRAY_BUFFER;
-    assert(false);
-    return 0;
 }
 
 void
