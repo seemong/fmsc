@@ -50,6 +50,10 @@ int streamFile(char *filename) {
     }
 }
 
+/**
+ * The lookAt function must be called inside redraw
+ * because predraw resets the identity matrix each time
+ */
 void
 redraw(Display * display, void * arg) {
     Mesh * m = (Mesh *) arg;
