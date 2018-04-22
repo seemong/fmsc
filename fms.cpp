@@ -68,7 +68,8 @@ redraw(Display * display, void * arg) {
     static float x = -30;
     static float y = 90;
     static float z = 50;
-    display->lookAt(x, y, z, 0, 0, 0, 0, 1, 0);
+    // display->lookAt(x, y, z, 0, 0, 0, 0, 1, 0);
+    display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);
     theta += 0.1;
     z -= 0.1;
     x += 0.1;
@@ -134,6 +135,7 @@ main(int argc, char * argv[]) {
     display->create(argc, argv);
     display->set_redraw(redraw, &mesh);
     display->set_perspective(90, 1, 0.001, 500);
+    // display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);
     /*
     display->set_ortho(tile.get_left(), tile.get_right(), 
         tile.get_bottom(), tile.get_top(), -5000, 5000);

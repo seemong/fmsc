@@ -94,7 +94,9 @@ public:
     void set_perspective(float fovy, float aspect, float zNear, float zFar);
 
     /**
-     * Set eye location
+     * Set eye location. 
+     * The lookAt function must be called inside redraw
+     * because predraw resets the identity matrix each time
      */
     void lookAt(float eyex, float eyey, float eyez,
         float centerx, float centery, float centerz,
