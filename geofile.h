@@ -105,4 +105,13 @@ public:
         float top);
 };
 
+/**
+ * Converts meters to units of arc
+ */
+inline float 
+meters_to_arc(float meters) {
+    return meters / 1852.0 / 60.0;
+}
+
+
 #endif // GEOFILE_H

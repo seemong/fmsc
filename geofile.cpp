@@ -68,7 +68,7 @@ GeoFile::read_data_as_tile(int xoff, int yoff,
         for(int col = 0; col < xsize; col++) {
             float x = boxleft + col * _xincrement;
             float y = boxtop - row * _yincrement;
-            float z = band_data.get()[col + row * xsize];
+            float z = meters_to_arc(band_data.get()[col + row * xsize]);
             int vertex_index = (col + row * xsize) * 3;
             vertex_data.get()[vertex_index] = x;
             vertex_data.get()[vertex_index + 1] = y;

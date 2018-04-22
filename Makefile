@@ -32,3 +32,7 @@ mesh.o: mesh.h mesh.cpp
 
 clean:
 	rm $(OBJECTS) $(TARGET)
+
+test: display.o test.o
+	g++ display.o test.o $(LIBS) $(CFLAGS) -o test
+	
