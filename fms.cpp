@@ -50,6 +50,9 @@ int streamFile(char *filename) {
     }
 }
 
+float eyex, eyey, eyez;
+float centerx, centery, centerz;
+
 /**
  * The lookAt function must be called inside redraw
  * because predraw resets the identity matrix each time
@@ -63,25 +66,16 @@ redraw(Display * display, void * arg) {
     shared_ptr<int> indices = m->get_indices();
     int num_indices = m->get_number_of_indices();
     
-    printf("Draw mesh with %d vertices\n", num_vertices);
+    //printf("Draw mesh with %d vertices\n", num_vertices);
     
-    static int i = 0;
-    static float radius = 20;
     static float theta = 0;
-
-    static float x = -30;
-    static float y = 90;
-    static float z = 50;
-    // display->lookAt(x, y, z, 0, 0, 0, 0, 1, 0);
-    display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);
+    eyex = centerx + meters_to_arc(2000) * sin(theta);
+    eyey = centery + meters_to_arc(2000) * cos(theta);
     theta += 0.1;
-    z -= 0.1;
-    x += 0.1;
-    y -= 0.2;
+    
+    display->lookAt(eyex, eyey, eyez, centerx, centery, centerz, 0, 0, 1);
+    display->draw_lines(vertices, num_vertices, indices, num_indices, normals, 1, 0, 0, 2);
 
-    display->draw_solid_sphere(3, 10, 10, -3, 0, 0, 1, 0, 0);
-    display->draw_solid_cube(3, 3, 0, 0, 0, 1, 0);
-    display->draw_wire_sphere(2, 10, 10, 0, -2, 0, 0, 0, 1);
 }
 
 int
@@ -109,12 +103,13 @@ main(int argc, char * argv[]) {
     float max_x = tile.get_right();
     float max_y = tile.get_top();
     
-    float centerx = (min_x + max_x) / 2;
-    float centery = (min_y + max_y) / 2;
+    centerx = (min_x + max_x) / 2;
+    centery = (min_y + max_y) / 2;
+    centerz = 0.0;
     
-    float eyex = min_x;
-    float eyey = min_y;
-    float eyez = meters_to_arc(1000);
+    eyex = min_x;
+    eyey = min_y;
+    eyez = meters_to_arc(2000);
     
     printf("eyex=%f, eyey=%f, eyez=%f\n", eyex, eyey, eyez);
     printf("cenx=%f, ceny=%f, cenz=%f\n", centerx, centery, 0.0);
@@ -124,7 +119,7 @@ main(int argc, char * argv[]) {
     shared_ptr<int> in = mesh.get_indices();
     printf("Indices:\n");
     for(int i = 0; i < mesh.get_number_of_indices(); i++) {
-        printf("(%d) ", in.get()[i]);
+        // printf("(%d) ", in.get()[i]);
     }
     printf("\n");
     
@@ -155,7 +150,7 @@ main(int argc, char * argv[]) {
         display->post_redisplay();
 
         clock_t t_new = clock();
-        cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
+        //cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
 }
