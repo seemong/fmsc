@@ -123,8 +123,17 @@ main(int argc, char * argv[]) {
     printf("eyex=%f, eyey=%f, eyez=%f\n", eyex, eyey, eyez);
     printf("cenx=%f, ceny=%f, cenz=%f\n", centerx, centery, 0.0);
     
-    FaceRectangleMesh mesh(v, tile.get_xsize(), tile.get_ysize());
+    list<IndexStrip> is = make_faces(5, 3);
+    for(list<IndexStrip>::iterator it = is.begin(); it != is.end(); it++) {
+        shared_ptr<int> indices = it->get_indices();
+        int num_indices = it->get_number_of_indices();
+        for(int i = 0; i < num_indices; i++) {
+            printf("%d ", indices.get()[i]);
+        }
+        printf("\n");
+    }
     
+    FaceRectangleMesh mesh(v, tile.get_xsize(), tile.get_ysize());
     printf("Normals:\n");
     shared_ptr<float> n = mesh.get_normals();
     for(int i = 0; i < mesh.get_number_of_normals(); i++) {

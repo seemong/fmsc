@@ -152,9 +152,33 @@ FaceRectangleMesh::FaceRectangleMesh(shared_ptr<float> vertices,
 
 void
 FaceRectangleMesh::make_face_indices() {
-    list<int> indices;
     int i = 0;
-        for(int yoff = 0; yoff < _ysize; yoff++) {
+    for(int yoff = 0; yoff < _ysize - 1; yoff++) {
+        list<int> indices;
+        for(int xoff = 0; xoff < _xsize; xoff++) {
+            indices.push_back(i);
+            indices.push_back(i + _xsize);
+            i += 1;
+        }
+        
+        // Made one strip, now copy it
+        int num_indices = indices.size();
+        shared_ptr<int> actual(new int[num_indices]);
+        int y = 0;
+        for(list<int>::iterator it = indices.begin();
+            it != indices.end(); it++) {
+            actual.get()[y++] = *it;
+        }
+        IndexStrip strip(actual, num_indices);
+        _index_list.push_back(strip);
+    }
+}
+
+list<IndexStrip> make_faces(int _xsize, int _ysize) {
+    list<IndexStrip> _index_list;
+    int i = 0;
+    for(int yoff = 0; yoff < _ysize - 1; yoff++) {
+        list<int> indices;
         for(int xoff = 0; xoff < _xsize; xoff++) {
             indices.push_back(i);
             indices.push_back(i + _xsize);
@@ -169,5 +193,6 @@ FaceRectangleMesh::make_face_indices() {
         }
         IndexStrip strip(actual, num_indices);
         _index_list.push_back(strip);
-    }
+    }    
+    return _index_list;
 }

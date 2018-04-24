@@ -89,4 +89,6 @@ public:
     FaceRectangleMesh(shared_ptr<float> vertices, int xsize, int ysize);
 };
 
+list<IndexStrip> make_faces(int _xsize, int _ysize) ;
+
 #endif
