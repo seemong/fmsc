@@ -69,7 +69,7 @@ void get_neighbors(float * vertices, int xoff, int yoff,
     int v2off = n2_x + n2_y * xsize;
     *v2 = &vertices[3 * v2off];
 }
-    
+
 void
 RectangleMesh::make_normals() {
     _normals = shared_ptr<float>(new float[_number_of_vertices * 3]);
@@ -103,9 +103,7 @@ RectangleMesh::make_normals() {
             }
         }
     }
-
 }
-
 
 WireRectangleMesh::WireRectangleMesh(shared_ptr<float> vertices, 
     int xsize, int ysize) : RectangleMesh(vertices, xsize, ysize) {

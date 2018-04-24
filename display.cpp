@@ -51,7 +51,7 @@ Display::create(int argc, char ** argv) {
     // set up light 0
     float ambient[] = {0.15, 0.15, 0.15, 1.0}; // default is dim white
     float diffuse[] = {1.0, 1.0, 1.0, 1.0 };   // default is white light
-    float position[] = { 0.0, 0.0, 1.0, 0.0 }; // default is from z
+    float position[] = { 0.0, 0.0, 1.0, 1.0 }; // default is from z
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);

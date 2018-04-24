@@ -65,6 +65,9 @@ redraw(Display * display, void * arg) {
     shared_ptr<float> normals = m->get_normals();
     list<IndexStrip> index_list = m->get_index_list();
     
+    static float earth_color[] = {135/256.0, 67/256.0, 23/256.0};
+ 
+    
     //printf("Draw mesh with %d vertices\n", num_vertices);
     
     static float theta = 0;
@@ -83,7 +86,7 @@ redraw(Display * display, void * arg) {
             normals, 1, 0, 0, 2);
         */
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
-            normals, 1, 0, 0);
+            normals, earth_color[0], earth_color[1], earth_color[2]);
     }
 }
 
@@ -137,7 +140,7 @@ main(int argc, char * argv[]) {
     printf("Normals:\n");
     shared_ptr<float> n = mesh.get_normals();
     for(int i = 0; i < mesh.get_number_of_normals(); i++) {
-        // printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
+        printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
     }
     printf("\n");
     
@@ -150,7 +153,7 @@ main(int argc, char * argv[]) {
     display->set_ortho(tile.get_left(), tile.get_right(), 
         tile.get_bottom(), tile.get_top(), -5000, 5000);
         */
-    display->set_light_position(5, 5, 5, 0);
+    // display->set_light_position(5, 5, 5, 1);
 
     clock_t t = clock();
     for(;;) {
@@ -161,7 +164,7 @@ main(int argc, char * argv[]) {
         display->post_redisplay();
 
         clock_t t_new = clock();
-        cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
+        // cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
 }
