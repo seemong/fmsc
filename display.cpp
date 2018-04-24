@@ -206,11 +206,36 @@ Display::draw_triangle_strip(shared_ptr<float> vertices, int num_vertices,
     glDisableClientState(GL_NORMAL_ARRAY);
 }
 
-VBO::VBO(shared_ptr<float> data, int size) :
-    _data(data), _size(size) {
+void 
+Display::draw_triangle_vbo(VBO& vertices_vbo, 
+        shared_ptr<int> indices, int num_indices,
+        VBO& normals_vbo, float r, float g, float b) {
+    glColor3f(r, g, b);
+    
+    vertices_vbo.bind();
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, 0);
+
+    // setup normals
+    normals_vbo.bind();
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glNormalPointer(GL_FLOAT, 0, 0);
+
+    glDrawElements(GL_TRIANGLE_STRIP, num_indices, GL_UNSIGNED_INT,
+           indices.get());
+ 
+    // clean up
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    
+    vertices_vbo.unbind();
+    normals_vbo.unbind();
+}
+
+
+VBO::VBO(float * data, int size) {
     glGenBuffers(1, &_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    glBufferData(GL_ARRAY_BUFFER, _size, _data.get(), GL_STATIC_DRAW);
+    glBufferData(_vbo, size, (const void *) data, GL_STATIC_DRAW);
 }
 
 VBO::~VBO() {
@@ -222,8 +247,7 @@ VBO::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 }
 
-void
+void 
 VBO::unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-

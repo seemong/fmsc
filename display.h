@@ -14,6 +14,23 @@
 using namespace std;
 
 /**
+ *  The VBO class abstracts OpenGL vertex buffer objects
+ */
+class VBO {
+protected:
+    unsigned int _vbo;
+
+public:
+    VBO(float * data, int size);
+    ~VBO();
+    
+    inline unsigned int get_vbo() { return _vbo; }
+    
+    void bind();
+    void unbind();
+};
+
+/**
  * The Display class abstracts OpenGL windowing
  */
 class Display {
@@ -139,37 +156,14 @@ public:
     void draw_triangle_strip(shared_ptr<float> vertices, int num_vertices,
         shared_ptr<int> indices, int num_indices,
         shared_ptr<float> normals, float r, float g, float b);
-};
-
-/**
- * VBO is a vertex buffer object that hides the complexity of OpenGL
- * vertex buffers
- */
-class VBO {
-protected:
-    shared_ptr<float> _data;
-    int _size;
-    GLuint _vbo;
-
-public:
-    VBO(shared_ptr<float> data, int size);
-     ~VBO();
-
-    inline shared_ptr<float> get_data() { return _data; }
-    inline int get_size() { return _size; }
-    inline int get_vbo() { return _vbo; }
-
-    /**
-     * Bind the data 
+        
+   /**
+     * Draw a triangle strip with vbos
      */
-    void bind();
-
-    /**
-     * unbind
-     */
-    void unbind();
+    void draw_triangle_vbo(VBO& vertices_vbo, 
+        shared_ptr<int> indices, int num_indices,
+        VBO& normals_vbo, float r, float g, float b);
 };
-
 
 
 #endif // DISPLAY_H

@@ -53,20 +53,27 @@ int streamFile(char *filename) {
 float eyex, eyey, eyez;
 float centerx, centery, centerz;
 
+class Meshes {
+public:
+    FaceRectangleMesh * face;
+    WireRectangleMesh * wire;
+};
+
 /**
  * The lookAt function must be called inside redraw
  * because predraw resets the identity matrix each time
  */
 void
 redraw(Display * display, void * arg) {
-    Mesh * m = (Mesh *) arg;
+    Meshes * meshes = (Meshes *) arg;
+    
+    FaceRectangleMesh * m = meshes->face;
     shared_ptr<float> vertices = m->get_vertices();
     int num_vertices = m->get_number_of_vertices();
     shared_ptr<float> normals = m->get_normals();
     list<IndexStrip> index_list = m->get_index_list();
     
     static float earth_color[] = {135/256.0, 67/256.0, 23/256.0};
- 
     
     //printf("Draw mesh with %d vertices\n", num_vertices);
     
@@ -78,17 +85,25 @@ redraw(Display * display, void * arg) {
     theta += 0.1;
     
     display->lookAt(eyex, eyey, eyez, centerx, 90, 0, 0, 0, 1);
-    int stripno = 0;
     for(list<IndexStrip>::iterator it = index_list.begin();
         it != index_list.end(); it++) {
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
-        /*
-        display->draw_lines(vertices, num_vertices, indices, num_indices, 
-            normals, 1, 0, 0, 2);
-        */
+
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
-            normals, earth_color[0], earth_color[1], earth_color[2]);
+            normals, earth_color[0], earth_color[1], earth_color[2]);  
+    }
+    WireRectangleMesh * wire = meshes->wire;
+    index_list = wire->get_index_list();
+    for(list<IndexStrip>::iterator it = index_list.begin();
+        it != index_list.end(); it++) {
+        shared_ptr<int> indices = it->get_indices();
+        int num_indices = it->get_number_of_indices();
+
+/*
+        display->draw_lines(vertices, num_vertices, indices, num_indices, 
+            normals, 0.1, 0, 0, 2);  
+            * */
     }
 }
 
@@ -138,17 +153,23 @@ main(int argc, char * argv[]) {
         // printf("\n");
     }
     
-    FaceRectangleMesh mesh(v, tile.get_xsize(), tile.get_ysize());
+    FaceRectangleMesh face(v, tile.get_xsize(), tile.get_ysize());
     printf("Normals:\n");
-    shared_ptr<float> n = mesh.get_normals();
-    for(int i = 0; i < mesh.get_number_of_normals(); i++) {
+    shared_ptr<float> n = face.get_normals();
+    for(int i = 0; i < face.get_number_of_normals(); i++) {
         // printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
     }
     // printf("\n");
     
+    WireRectangleMesh wire(v, tile.get_xsize(), tile.get_ysize());
+    
+    Meshes meshes;
+    meshes.wire = &wire;
+    meshes.face = &face;
+    
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
-    display->set_redraw(redraw, &mesh);
+    display->set_redraw(redraw, &meshes);
     display->set_perspective(90, 1, meters_to_arc(10), 500);
     // display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);
     /*
