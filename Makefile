@@ -18,7 +18,7 @@ LIBS = -lxml2 -lGL -lglut -lGLU -lgdal
 $(TARGET): $(OBJECTS)
 	g++ $(OBJECTS) $(LIBS) $(CFLAGS) -o fms
 
-fms.o: fms.cpp geometry.h mapobject.h display.h geofile.h
+fms.o: fms.cpp geometry.h mapobject.h display.h geofile.h mesh.h
 
 geometry.o: geometry.h geometry.cpp
 

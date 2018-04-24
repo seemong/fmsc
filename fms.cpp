@@ -63,8 +63,7 @@ redraw(Display * display, void * arg) {
     shared_ptr<float> vertices = m->get_vertices();
     int num_vertices = m->get_number_of_vertices();
     shared_ptr<float> normals = m->get_normals();
-    shared_ptr<int> indices = m->get_indices();
-    int num_indices = m->get_number_of_indices();
+    list<IndexStrip> index_list = m->get_index_list();
     
     //printf("Draw mesh with %d vertices\n", num_vertices);
     
@@ -74,8 +73,19 @@ redraw(Display * display, void * arg) {
     theta += 0.1;
     
     display->lookAt(eyex, eyey, eyez, centerx, centery, centerz, 0, 0, 1);
-    display->draw_lines(vertices, num_vertices, indices, num_indices, normals, 1, 0, 0, 2);
-
+    int stripno = 0;
+    for(list<IndexStrip>::iterator it = index_list.begin();
+        it != index_list.end(); it++) {
+        shared_ptr<int> indices = it->get_indices();
+        int num_indices = it->get_number_of_indices();
+        /*
+        display->draw_lines(vertices, num_vertices, indices, num_indices, 
+            normals, 1, 0, 0, 2);
+        */
+        printf("drawing strip %d\n", stripno++);
+        display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
+            normals, 1, 0, 0);
+    }
 }
 
 int
@@ -113,15 +123,8 @@ main(int argc, char * argv[]) {
     
     printf("eyex=%f, eyey=%f, eyez=%f\n", eyex, eyey, eyez);
     printf("cenx=%f, ceny=%f, cenz=%f\n", centerx, centery, 0.0);
-
-    WireRectangleMesh mesh(v, tile.get_xsize(),
-        tile.get_ysize());
-    shared_ptr<int> in = mesh.get_indices();
-    printf("Indices:\n");
-    for(int i = 0; i < mesh.get_number_of_indices(); i++) {
-        // printf("(%d) ", in.get()[i]);
-    }
-    printf("\n");
+    
+    FaceRectangleMesh mesh(v, tile.get_xsize(), tile.get_ysize());
     
     printf("Normals:\n");
     shared_ptr<float> n = mesh.get_normals();

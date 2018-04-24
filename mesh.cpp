@@ -12,19 +12,17 @@
 using namespace std;
 
 Mesh::Mesh(shared_ptr<float> vertices, int number_of_vertices, 
-    shared_ptr<int> indices, int number_of_indices,
-    shared_ptr<float> normals) {
+    list<IndexStrip> index_list, shared_ptr<float> normals) {
     _vertices = vertices;
     _number_of_vertices = number_of_vertices;
-    _indices = indices;
-    _number_of_indices = number_of_indices;
+    _index_list = index_list;
     _normals = normals;
 }
 
 
 RectangleMesh::RectangleMesh(shared_ptr<float> vertices, 
     int xsize, int ysize) : Mesh(vertices, xsize * ysize, 
-        shared_ptr<int>(0), 0, shared_ptr<float>(0)), 
+        list<IndexStrip>(), shared_ptr<float>(0)), 
     _xsize(xsize), _ysize(ysize) {
     make_normals();
 }
@@ -118,36 +116,58 @@ void
 WireRectangleMesh::make_mesh_indices() {
     int east_west_count = (2 * (_xsize - 1)) * _ysize;
     int north_south_count = (2 * (_ysize - 1)) * _xsize;
-    _number_of_indices = east_west_count + north_south_count;
-    _indices = shared_ptr<int>(new int[_number_of_indices]);
+    int number_of_indices = east_west_count + north_south_count;
+    shared_ptr<int> indices(new int[number_of_indices]);
+    IndexStrip index_strip(indices, number_of_indices);
  
     // do east west lines
     int i = 0;
     for(int row = 0; row < _ysize; row++) {
-        _indices.get()[i++] = row * _xsize;
+        indices.get()[i++] = row * _xsize;
         for(int col = 1; col < _xsize - 1; col++) {
-            _indices.get()[i++] = col + row * _xsize;
-            _indices.get()[i++] = col + row * _xsize;
+            indices.get()[i++] = col + row * _xsize;
+            indices.get()[i++] = col + row * _xsize;
         }
-        _indices.get()[i++] = _xsize - 1 + row * _xsize;
+        indices.get()[i++] = _xsize - 1 + row * _xsize;
     }
 
     // do north south lines
     for(int col = 0; col < _xsize; col++) {
-        _indices.get()[i++] = col;
+        indices.get()[i++] = col;
         for(int row = 1; row < _ysize - 1; row++) {
-            _indices.get()[i++] = col + row * _xsize;
-            _indices.get()[i++] = col + row * _xsize;
+            indices.get()[i++] = col + row * _xsize;
+            indices.get()[i++] = col + row * _xsize;
         }
-        _indices.get()[i++] = col + (_ysize - 1) * _xsize;
+        indices.get()[i++] = col + (_ysize - 1) * _xsize;
     }
+    
+    _index_list.push_back(index_strip);
 }
 
 
 FaceRectangleMesh::FaceRectangleMesh(shared_ptr<float> vertices, 
-    int xsize, int ysize) : RectangleMesh(_vertices, xsize, ysize) {
+    int xsize, int ysize) : RectangleMesh(vertices, xsize, ysize) {
+    make_face_indices();
 }
 
 void
 FaceRectangleMesh::make_face_indices() {
+    list<int> indices;
+    int i = 0;
+        for(int yoff = 0; yoff < _ysize; yoff++) {
+        for(int xoff = 0; xoff < _xsize; xoff++) {
+            indices.push_back(i);
+            indices.push_back(i + _xsize);
+            i += 1;
+        }
+        int num_indices = indices.size();
+        shared_ptr<int> actual(new int[num_indices]);
+        int y = 0;
+        for(list<int>::iterator it = indices.begin();
+            it != indices.end(); it++) {
+            actual.get()[y++] = *it;
+        }
+        IndexStrip strip(actual, num_indices);
+        _index_list.push_back(strip);
+    }
 }

@@ -132,6 +132,13 @@ public:
         shared_ptr<int> indices, int num_indices,
         shared_ptr<float> normals, float r, float g, float b,
         int line_size);
+        
+   /**
+     * Draw a triangle strip
+     */
+    void draw_triangle_strip(shared_ptr<float> vertices, int num_vertices,
+        shared_ptr<int> indices, int num_indices,
+        shared_ptr<float> normals, float r, float g, float b);
 };
 
 /**

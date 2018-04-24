@@ -8,7 +8,22 @@
 #define MESH_h
 
 #include <memory>
+#include <list>
 using namespace std;
+
+class IndexStrip {
+protected:
+    shared_ptr<int> _indices;
+    int _number_of_indices;
+    
+public:
+    IndexStrip(shared_ptr<int> indices, int number_of_indices) :
+        _indices(indices), _number_of_indices(number_of_indices) {
+    }
+    
+    inline shared_ptr<int> get_indices() { return _indices; }
+    inline int get_number_of_indices() { return _number_of_indices; }
+};
 
 /**
  * Mesh class holds vertices. Indices and normals are set by
@@ -18,20 +33,18 @@ class Mesh {
 protected:
     shared_ptr<float> _vertices;
     int _number_of_vertices;
-    shared_ptr<int> _indices;
-    int _number_of_indices;
+    list<IndexStrip> _index_list;
     shared_ptr<float> _normals;
     
 public:
     Mesh(shared_ptr<float> vertices, int number_of_vertices, 
-        shared_ptr<int> indices, int number_of_indices,
-        shared_ptr<float> normals);
+        list<IndexStrip> index_strip, shared_ptr<float> normals);
     
     inline shared_ptr<float> get_vertices() { return _vertices; }
     inline int get_number_of_vertices() { return _number_of_vertices; }
     
-    inline shared_ptr<int> get_indices() { return _indices; }
-    inline int get_number_of_indices() { return _number_of_indices; }
+    inline list<IndexStrip> get_index_list() { return _index_list; }
+    inline int get_index_list_size() { return _index_list.size(); }
     
     inline shared_ptr<float> get_normals() { return _normals; }
     inline int get_number_of_normals() { return _number_of_vertices; }
