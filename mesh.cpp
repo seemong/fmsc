@@ -19,9 +19,9 @@ Mesh::Mesh(shared_ptr<float> vertices, int number_of_vertices,
     _normals = normals;
     
     _vertex_vbo = shared_ptr<VBO>(new VBO(vertices.get(), 
-        number_of_vertices * 3));
+        sizeof(float) * number_of_vertices * 3));
     _normals_vbo = shared_ptr<VBO>(new VBO(normals.get(), 
-        number_of_vertices * 3));
+        sizeof(float) * number_of_vertices * 3));
 }
 
 

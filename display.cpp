@@ -235,7 +235,7 @@ Display::draw_triangle_strip_vbo(shared_ptr<VBO> vertices_vbo,
 
 VBO::VBO(float * data, int size) {
     glGenBuffers(1, &_vbo);
-    glBufferData(_vbo, size, (const void *) data, GL_STATIC_DRAW);
+    glNamedBufferData(_vbo, size, (const void *) data, GL_STATIC_DRAW);
 }
 
 VBO::~VBO() {
