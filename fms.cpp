@@ -71,7 +71,10 @@ redraw(Display * display, void * arg) {
     //printf("Draw mesh with %d vertices\n", num_vertices);
     
     static float theta = 0;
-    eyey = eyey + meters_to_arc(50);
+    eyey = eyey + meters_to_arc(5);
+    if (eyey > 48)
+        eyey = 47;
+        
     theta += 0.1;
     
     display->lookAt(eyex, eyey, eyez, centerx, 90, 0, 0, 0, 1);
@@ -120,7 +123,7 @@ main(int argc, char * argv[]) {
     
     eyex = (min_x + max_x)/2;
     eyey = min_y;
-    eyez = meters_to_arc(1000);
+    eyez = meters_to_arc(2000);
     
     printf("eyex=%f, eyey=%f, eyez=%f\n", eyex, eyey, eyez);
     printf("cenx=%f, ceny=%f, cenz=%f\n", centerx, centery, 0.0);
@@ -146,7 +149,7 @@ main(int argc, char * argv[]) {
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
     display->set_redraw(redraw, &mesh);
-    display->set_perspective(90, 1, 0.001, 500);
+    display->set_perspective(90, 1, meters_to_arc(10), 500);
     // display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);
     /*
     display->set_ortho(tile.get_left(), tile.get_right(), 
