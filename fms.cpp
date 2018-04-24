@@ -71,11 +71,10 @@ redraw(Display * display, void * arg) {
     //printf("Draw mesh with %d vertices\n", num_vertices);
     
     static float theta = 0;
-    eyex = centerx + meters_to_arc(2000) * sin(theta);
-    eyey = centery + meters_to_arc(2000) * cos(theta);
+    eyey = eyey + meters_to_arc(50);
     theta += 0.1;
     
-    display->lookAt(eyex, eyey, eyez, centerx, centery, centerz, 0, 0, 1);
+    display->lookAt(eyex, eyey, eyez, centerx, 90, 0, 0, 0, 1);
     int stripno = 0;
     for(list<IndexStrip>::iterator it = index_list.begin();
         it != index_list.end(); it++) {
@@ -104,10 +103,10 @@ main(int argc, char * argv[]) {
 #endif
 
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 100, 100);
+    GeoTile tile = g->read_data_as_tile(0, 0, 1200, 1200);
     shared_ptr<float> v = tile.get_vertices();
     for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
-        printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
+        // printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
     }
     
     float min_x = tile.get_left();
@@ -119,9 +118,9 @@ main(int argc, char * argv[]) {
     centery = (min_y + max_y) / 2;
     centerz = 0.0;
     
-    eyex = min_x;
+    eyex = (min_x + max_x)/2;
     eyey = min_y;
-    eyez = meters_to_arc(2000);
+    eyez = meters_to_arc(1000);
     
     printf("eyex=%f, eyey=%f, eyez=%f\n", eyex, eyey, eyez);
     printf("cenx=%f, ceny=%f, cenz=%f\n", centerx, centery, 0.0);
@@ -131,18 +130,18 @@ main(int argc, char * argv[]) {
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
         for(int i = 0; i < num_indices; i++) {
-            printf("%d ", indices.get()[i]);
+            // printf("%d ", indices.get()[i]);
         }
-        printf("\n");
+        // printf("\n");
     }
     
     FaceRectangleMesh mesh(v, tile.get_xsize(), tile.get_ysize());
     printf("Normals:\n");
     shared_ptr<float> n = mesh.get_normals();
     for(int i = 0; i < mesh.get_number_of_normals(); i++) {
-        printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
+        // printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
     }
-    printf("\n");
+    // printf("\n");
     
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create(argc, argv);
