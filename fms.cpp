@@ -82,7 +82,6 @@ redraw(Display * display, void * arg) {
         display->draw_lines(vertices, num_vertices, indices, num_indices, 
             normals, 1, 0, 0, 2);
         */
-        printf("drawing strip %d\n", stripno++);
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
             normals, 1, 0, 0);
     }
