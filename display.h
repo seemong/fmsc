@@ -20,14 +20,32 @@ class VBO {
 protected:
     unsigned int _vbo;
 
+    virtual void make_vbo() = 0;
+    
 public:
     VBO(float * data, int size);
-    ~VBO();
+    virtual ~VBO();
     
     inline unsigned int get_vbo() { return _vbo; }
     
     void bind();
     void unbind();
+};
+
+class VertexVBO : public VBO {
+protected:
+    virtual void make_vbo();
+    
+public:
+    VertexVBO(float * data, int size);
+};
+
+class IndexVBO : public VBO {
+protected: 
+    virtual void make_vbo();
+    
+public:
+    IndexVBO(int * data, int size);
 };
 
 /**
