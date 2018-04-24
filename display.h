@@ -19,14 +19,11 @@ using namespace std;
 class VBO {
 protected:
     unsigned int _vbo;
-
-    virtual void make_vbo() = 0;
+    unsigned int _type;
     
 public:
-    VBO(float * data, int size);
+    VBO(void * data, int size, unsigned int type);
     virtual ~VBO();
-    
-    inline unsigned int get_vbo() { return _vbo; }
     
     void bind();
     void unbind();
@@ -34,7 +31,6 @@ public:
 
 class VertexVBO : public VBO {
 protected:
-    virtual void make_vbo();
     
 public:
     VertexVBO(float * data, int size);
@@ -42,7 +38,6 @@ public:
 
 class IndexVBO : public VBO {
 protected: 
-    virtual void make_vbo();
     
 public:
     IndexVBO(int * data, int size);
@@ -178,9 +173,9 @@ public:
    /**
      * Draw a triangle strip with vbos
      */
-    void draw_triangle_strip_vbo(shared_ptr<VBO> vertices_vbo, 
-        shared_ptr<int> indices, int num_indices,
-        shared_ptr<VBO> normals_vbo, float r, float g, float b);
+    void draw_triangle_strip_vbo(shared_ptr<VertexVBO> vertices_vbo, 
+        shared_ptr<IndexVBO> index_vbo, int num_indices,
+        shared_ptr<VertexVBO> normals_vbo, float r, float g, float b);
 };
 
 
