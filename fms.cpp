@@ -153,7 +153,7 @@ main(int argc, char * argv[]) {
         display->post_redisplay();
 
         clock_t t_new = clock();
-        //cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
+        cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
 }
