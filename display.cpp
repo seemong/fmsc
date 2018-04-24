@@ -207,17 +207,17 @@ Display::draw_triangle_strip(shared_ptr<float> vertices, int num_vertices,
 }
 
 void 
-Display::draw_triangle_vbo(VBO& vertices_vbo, 
+Display::draw_triangle_strip_vbo(shared_ptr<VBO> vertices_vbo, 
         shared_ptr<int> indices, int num_indices,
-        VBO& normals_vbo, float r, float g, float b) {
+        shared_ptr<VBO> normals_vbo, float r, float g, float b) {
     glColor3f(r, g, b);
     
-    vertices_vbo.bind();
+    vertices_vbo->bind();
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, 0);
 
     // setup normals
-    normals_vbo.bind();
+    normals_vbo->bind();
     glEnableClientState(GL_NORMAL_ARRAY);
     glNormalPointer(GL_FLOAT, 0, 0);
 
@@ -228,8 +228,8 @@ Display::draw_triangle_vbo(VBO& vertices_vbo,
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     
-    vertices_vbo.unbind();
-    normals_vbo.unbind();
+    vertices_vbo->unbind();
+    normals_vbo->unbind();
 }
 
 

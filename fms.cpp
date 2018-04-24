@@ -85,14 +85,21 @@ redraw(Display * display, void * arg) {
     theta += 0.1;
     
     display->lookAt(eyex, eyey, eyez, centerx, 90, 0, 0, 0, 1);
+    shared_ptr<VBO> vertex_vbo = m->get_vertex_vbo();
+    shared_ptr<VBO> normals_vbo = m->get_normals_vbo();
     for(list<IndexStrip>::iterator it = index_list.begin();
         it != index_list.end(); it++) {
+            
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
-
+            /*
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
             normals, earth_color[0], earth_color[1], earth_color[2]);  
+            */
+        display->draw_triangle_strip_vbo(vertex_vbo, indices, num_indices, 
+            normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
     }
+    /*
     WireRectangleMesh * wire = meshes->wire;
     index_list = wire->get_index_list();
     for(list<IndexStrip>::iterator it = index_list.begin();
@@ -100,11 +107,10 @@ redraw(Display * display, void * arg) {
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
 
-/*
         display->draw_lines(vertices, num_vertices, indices, num_indices, 
             normals, 0.1, 0, 0, 2);  
-            * */
     }
+    */
 }
 
 int

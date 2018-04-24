@@ -160,9 +160,9 @@ public:
    /**
      * Draw a triangle strip with vbos
      */
-    void draw_triangle_vbo(VBO& vertices_vbo, 
+    void draw_triangle_strip_vbo(shared_ptr<VBO> vertices_vbo, 
         shared_ptr<int> indices, int num_indices,
-        VBO& normals_vbo, float r, float g, float b);
+        shared_ptr<VBO> normals_vbo, float r, float g, float b);
 };
 
 

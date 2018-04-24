@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <list>
+#include "display.h"
 using namespace std;
 
 class IndexStrip {
@@ -36,6 +37,9 @@ protected:
     list<IndexStrip> _index_list;
     shared_ptr<float> _normals;
     
+    shared_ptr<VBO> _vertex_vbo;
+    shared_ptr<VBO> _normals_vbo;
+    
 public:
     Mesh(shared_ptr<float> vertices, int number_of_vertices, 
         list<IndexStrip> index_strip, shared_ptr<float> normals);
@@ -48,6 +52,9 @@ public:
     
     inline shared_ptr<float> get_normals() { return _normals; }
     inline int get_number_of_normals() { return _number_of_vertices; }
+    
+    inline shared_ptr<VBO> get_vertex_vbo() { return _vertex_vbo; }
+    inline shared_ptr<VBO> get_normals_vbo() { return _normals_vbo; }
 };
 
 class RectangleMesh : public Mesh {
