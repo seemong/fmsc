@@ -18,8 +18,8 @@ class Mapstore {
 protected:
     list<shared_ptr<GeoFile>> _geo_files;
 
-    void add_gdal_files_from_directory(const string& directory);
-    void add_subdirectories(const string& directory);
+    void add_geofiles_from_directory(const string& directory);
+    void add_geofile(const string& filename);
 
 public:
     /**

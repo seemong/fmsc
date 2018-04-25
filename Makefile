@@ -38,6 +38,6 @@ testfms.o: testfms.cpp
 clean:
 	rm $(OBJECTS) $(TARGET)
 
-testfms: display.o testfms.o mapstore.o
-	g++ display.o testfms.o mapstore.o $(LIBS) $(CFLAGS) -o testfms
+testfms: display.o testfms.o mapstore.o geofile.o
+	g++ display.o testfms.o mapstore.o geofile.o $(LIBS) $(CFLAGS) -o testfms
 	

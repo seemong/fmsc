@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include <memory>
+#include <cassert>
 #include "mapobject.h"
 #include "display.h"
 #include "geofile.h"
@@ -151,6 +152,9 @@ main(int argc, char * argv[]) {
     display->create();
     
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
+    bool good = g->open();
+    assert(good);
+        
     GeoTile tile = g->read_data_as_tile(0, 0, 250, 250);
     shared_ptr<float> v = tile.get_vertices();
     for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {

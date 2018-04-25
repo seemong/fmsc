@@ -21,9 +21,16 @@ GeoFile::init() {
 
 GeoFile::GeoFile(string filename):
     _filename(filename), _rows(0), _cols(0), _bands(0), _left(0), _bottom(0),
-    _top(0), _right(0), _xincrement(0), _yincrement(0) {
+    _dataset(0), _top(0), _right(0), _xincrement(0), _yincrement(0) {
     GeoFile::init();
+}
+
+bool
+GeoFile::open() {
     _dataset = (GDALDataset *) GDALOpen(_filename.c_str(), GA_ReadOnly);
+    if (_dataset == 0)
+        return false;
+        
     _cols = _dataset->GetRasterXSize();
     _rows = _dataset->GetRasterYSize();
     _bands = _dataset->GetRasterCount();
@@ -36,6 +43,8 @@ GeoFile::GeoFile(string filename):
     _yincrement = -gt[5];
     _right = _left +  _xincrement * (_cols - 1);
     _bottom = _top - _yincrement * (_rows - 1);
+    
+    return true;
 }
 
 GeoFile::~GeoFile() {

@@ -73,6 +73,11 @@ protected:
 public:
     GeoFile(string filename);
     virtual ~GeoFile();
+    
+    /**
+     *  Return true if the file opened successfully
+     */
+    bool open();
 
     inline string get_filename() { return _filename; }
     inline int get_rows() { return _rows; }
