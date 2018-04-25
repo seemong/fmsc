@@ -108,6 +108,11 @@ public:
      */
     GeoTile get_tile(float left, float bottom, float right,
         float top);
+        
+    /**
+     * True if this GeoFile contains this point
+     */
+    bool contains(float x, float y);
 };
 
 /**

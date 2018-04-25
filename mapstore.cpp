@@ -46,3 +46,23 @@ Mapstore::add_geofile(const string& filename) {
         _geo_files.push_back(geofile);
     }
 }
+
+list<GeoTile> 
+Mapstore::get_geotiles(float left, float bottom, float right, float top, 
+        int resolution) {
+    float increment = resolution/3600.0;
+    list<GeoTile> tiles;
+    for(shared_ptr<GeoFile>& geofile : _geo_files) {
+        if (round(increment * 100000) == 
+            round(geofile->get_xincrement() * 100000) && (
+                geofile->contains(left, bottom) ||
+                geofile->contains(right, top) ||
+                geofile->contains(left, top) ||
+                geofile->contains(right, bottom))) {
+            GeoTile tile = geofile->get_tile(left, bottom, right, top);
+            tiles.push_back(tile);
+        }
+    }
+    
+    return tiles;
+}

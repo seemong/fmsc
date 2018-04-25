@@ -90,9 +90,20 @@ GeoFile::read_data_as_tile(int xoff, int yoff,
 
 GeoTile
 GeoFile::get_tile(float left, float bottom, float right, float top) {
+    // Set bounding box limits
+    if (left < _left) left = _left;
+    if (bottom < _bottom) bottom = _bottom;
+    if (right > _right) right = _right;
+    if (top > _top) top = _top;
+    
     int xoff = (left - _left)/_xincrement;
     int yoff = (_top - top)/_yincrement;
     int xsize = (right - left)/_xincrement;
     int ysize = (top - bottom)/_yincrement;
     return read_data_as_tile(xoff, yoff, xsize, ysize);
+}
+
+bool
+GeoFile::contains(float x, float y) {
+    return (x >= _left && x <= _right && y >= _bottom && y <= _top);
 }

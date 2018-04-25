@@ -26,6 +26,13 @@ public:
      * Create a mapstore based on all the given files
      */
     Mapstore(list<string> filepaths);
+    
+    /**
+     * Given lon/lat coordinates of a bounding box and resolution in arc 
+     * seconds, return a list of GeoTiles that represent the data
+     */
+    list<GeoTile> get_geotiles(float left, float bottom, float right, float top, 
+        int resolution);
 };
 
 #endif
