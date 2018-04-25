@@ -22,8 +22,6 @@ Mesh::Mesh(shared_ptr<float> vertices, int number_of_vertices,
         sizeof(float) * 3 * number_of_vertices));
     _normals_vbo = shared_ptr<VertexVBO>(new VertexVBO(normals.get(), 
         sizeof(float) * 3 * number_of_vertices ));
-    // TODO: make index vbo
-    _index_vbo = shared_ptr<IndexVBO>(0);
 }
 
 

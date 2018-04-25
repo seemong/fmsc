@@ -90,16 +90,16 @@ redraw(Display * display, void * arg) {
     for(list<IndexStrip>::iterator it = index_list.begin();
         it != index_list.end(); it++) {
             
-        shared_ptr<IndexVBO> index_vbo = it->get_index_vbo();
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
-            
+         
+        /*
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
             normals, earth_color[0], earth_color[1], earth_color[2]);  
-            
-        /*display->draw_triangle_strip_vbo(vertex_vbo, index_vbo, num_indices, 
+        */
+        
+        display->draw_triangle_strip_vbo(vertex_vbo, indices, num_indices, 
             normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
-            * */
     }
     /*
     WireRectangleMesh * wire = meshes->wire;
@@ -127,9 +127,13 @@ main(int argc, char * argv[]) {
     cout << "Streaming  " << argv[1] << "\n";
     streamFile(argv[1]);
 #endif
-
+    // Call display init early before using any open GL function
+    Display::Init(argc, argv);
+    Display * display = new Display("the display", 0, 0, 800, 800);
+    display->create();
+    
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 1200, 1200);
+    GeoTile tile = g->read_data_as_tile(0, 0, 400, 400);
     shared_ptr<float> v = tile.get_vertices();
     for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
         // printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
@@ -175,8 +179,6 @@ main(int argc, char * argv[]) {
     meshes.wire = &wire;
     meshes.face = &face;
     
-    Display * display = new Display("the display", 0, 0, 800, 800);
-    display->create(argc, argv);
     display->set_redraw(redraw, &meshes);
     display->set_perspective(90, 1, meters_to_arc(10), 500);
     // display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);

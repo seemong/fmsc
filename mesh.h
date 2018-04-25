@@ -16,18 +16,14 @@ class IndexStrip {
 protected:
     shared_ptr<int> _indices;
     int _number_of_indices;
-    shared_ptr<IndexVBO> _index_vbo;
     
 public:
     IndexStrip(shared_ptr<int> indices, int number_of_indices) :
         _indices(indices), _number_of_indices(number_of_indices) {
-        _index_vbo = shared_ptr<IndexVBO>(new IndexVBO(indices.get(), 
-            sizeof(int) * number_of_indices));
     }
     
     inline shared_ptr<int> get_indices() { return _indices; }
     inline int get_number_of_indices() { return _number_of_indices; }
-    inline shared_ptr<IndexVBO> get_index_vbo() { return _index_vbo; }
 };
 
 /**
@@ -43,7 +39,6 @@ protected:
     
     shared_ptr<VertexVBO> _vertex_vbo;
     shared_ptr<VertexVBO> _normals_vbo;
-    shared_ptr<IndexVBO> _index_vbo;
     
 public:
     Mesh(shared_ptr<float> vertices, int number_of_vertices, 
@@ -60,7 +55,6 @@ public:
     
     inline shared_ptr<VertexVBO> get_vertex_vbo() { return _vertex_vbo; }
     inline shared_ptr<VertexVBO> get_normals_vbo() { return _normals_vbo; }
-    inline shared_ptr<IndexVBO> get_index_vbo() { return _index_vbo; }
 };
 
 class RectangleMesh : public Mesh {

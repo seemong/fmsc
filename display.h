@@ -19,11 +19,16 @@ using namespace std;
 class VBO {
 protected:
     unsigned int _vbo;
-    unsigned int _type;
+    unsigned int _target;
     
 public:
-    VBO(void * data, int size, unsigned int type);
+    /**
+     * Create a VBO with size in bytes
+     */
+    VBO(void * data, int size, unsigned int target);
     virtual ~VBO();
+    
+    inline unsigned int get_vbo() { return _vbo; }
     
     void bind();
     void unbind();
@@ -33,6 +38,9 @@ class VertexVBO : public VBO {
 protected:
     
 public:
+    /**
+     * Create a GL_VERTEX_ARRAY VBO with size in bytes
+     */
     VertexVBO(float * data, int size);
 };
 
@@ -40,6 +48,9 @@ class IndexVBO : public VBO {
 protected: 
     
 public:
+    /**
+     * Create a GL_ELEMENT_ARRAY VBO with size in bytes
+     */
     IndexVBO(int * data, int size);
 };
 
@@ -91,11 +102,16 @@ public:
      */
     Display(string name, int x, int y, int width, int height);
     ~Display();
+    
+    /**
+     * Init must be called before using any openGL function
+     */
+    static void Init(int argc, char ** argv);
 
     /**
      * Create window and initialize OpenGL
      */
-    void create(int argc, char ** argv);
+    void create();
 
     /**
      * Do one loops worth of events
@@ -174,7 +190,7 @@ public:
      * Draw a triangle strip with vbos
      */
     void draw_triangle_strip_vbo(shared_ptr<VertexVBO> vertices_vbo, 
-        shared_ptr<IndexVBO> index_vbo, int num_indices,
+        shared_ptr<int> indices, int num_indices,
         shared_ptr<VertexVBO> normals_vbo, float r, float g, float b);
 };
 

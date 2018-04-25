@@ -33,9 +33,13 @@ Display::redraw_all() {
 }
 
 void
-Display::create(int argc, char ** argv) {
-    // create window
+Display::Init(int argc, char ** argv) {
     glutInit(&argc, argv);
+}
+
+void
+Display::create() {
+    // create window
     glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
     glutInitWindowSize(_width, _height);
     glutInitWindowPosition(_x, _y);
@@ -208,36 +212,46 @@ Display::draw_triangle_strip(shared_ptr<float> vertices, int num_vertices,
 
 void 
 Display::draw_triangle_strip_vbo(shared_ptr<VertexVBO> vertices_vbo, 
-        shared_ptr<IndexVBO> index_vbo, int num_indices,
+        shared_ptr<int> indices, int num_indices,
         shared_ptr<VertexVBO> normals_vbo, float r, float g, float b) {
     glColor3f(r, g, b);
     
-    vertices_vbo->bind();
+    // setup vertices
+    glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo->get_vbo());
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, 0);
+    
+    printf("Bound vertex VBO %d\n", vertices_vbo->get_vbo());
 
     // setup normals
-    normals_vbo->bind();
+    glBindBuffer(GL_ARRAY_BUFFER, normals_vbo->get_vbo());
     glEnableClientState(GL_NORMAL_ARRAY);
-    
-    index_vbo->bind();
+    glNormalPointer(GL_FLOAT, 0, 0);
 
-    glDrawElements(GL_TRIANGLE_STRIP, num_indices, GL_UNSIGNED_INT, 0);
+    printf("Bound normal VBO %d\n", normals_vbo->get_vbo());
+    
+    glDrawElements(GL_TRIANGLE_STRIP, num_indices, GL_UNSIGNED_INT, 
+        indices.get());  
  
     // clean up
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     
-    vertices_vbo->unbind();
-    normals_vbo->unbind();
-    index_vbo->unbind();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
-VBO::VBO(void * data, int size, unsigned int type) {
-    _type = type;
+VBO::VBO(void * data, int size, unsigned int target) {
+    _target = target;
     glGenBuffers(1, &_vbo);
-    glNamedBufferData(_vbo, size, (const void *) data, GL_STATIC_DRAW);
+    assert(glGetError() == GL_NO_ERROR);
+    assert(_vbo != 0);
+
+    glBindBuffer(target, _vbo);
+    assert(glGetError() == GL_NO_ERROR);
+
+    glBufferData(target, size, (const void *) data, GL_STATIC_DRAW);
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 VBO::~VBO() {
@@ -246,12 +260,12 @@ VBO::~VBO() {
 
 void
 VBO::bind() {
-    glBindBuffer(_type, _vbo);
+    glBindBuffer(_target, _vbo);
 }
 
 void 
 VBO::unbind() {
-    glBindBuffer(_type, 0);
+    glBindBuffer(_target, 0);
 }
 
 VertexVBO::VertexVBO(float * data, int size) :
