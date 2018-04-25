@@ -18,10 +18,12 @@ Mesh::Mesh(shared_ptr<float> vertices, int number_of_vertices,
     _index_list = index_list;
     _normals = normals;
     
+#ifdef MESH_VBO
     _vertex_vbo = shared_ptr<VertexVBO>(new VertexVBO(vertices.get(), 
         sizeof(float) * 3 * number_of_vertices));
     _normals_vbo = shared_ptr<VertexVBO>(new VertexVBO(normals.get(), 
         sizeof(float) * 3 * number_of_vertices ));
+#endif
 }
 
 

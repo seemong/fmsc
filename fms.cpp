@@ -67,8 +67,8 @@ void
 redraw(Display * display, void * arg) {
     Meshes * meshes = (Meshes *) arg;
     
-    // FaceRectangleMesh * m = meshes->face;
-    WireRectangleMesh * m = meshes->wire;
+    FaceRectangleMesh * m = meshes->face;
+    // WireRectangleMesh * m = meshes->wire;
     shared_ptr<float> vertices = m->get_vertices();
     int num_vertices = m->get_number_of_vertices();
     shared_ptr<float> normals = m->get_normals();
@@ -86,20 +86,24 @@ redraw(Display * display, void * arg) {
     theta += 0.1;
     
     display->lookAt(eyex, eyey, eyez, centerx, 90, 0, 0, 0, 1);
+#ifdef MESH_VBO
     shared_ptr<VertexVBO> vertex_vbo = m->get_vertex_vbo();
     shared_ptr<VertexVBO> normals_vbo = m->get_normals_vbo();
+#endif
     for(list<IndexStrip>::iterator it = index_list.begin();
         it != index_list.end(); it++) {
             
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
          
-        /*
+        
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
             normals, earth_color[0], earth_color[1], earth_color[2]);  
-        */
+        
+        /*
         display->draw_lines_vbo(vertex_vbo, indices, num_indices,
             normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
+            */
         /*
         display->draw_triangle_strip_vbo(vertex_vbo, indices, num_indices, 
             normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
