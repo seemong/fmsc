@@ -192,6 +192,10 @@ public:
     void draw_triangle_strip_vbo(shared_ptr<VertexVBO> vertices_vbo, 
         shared_ptr<int> indices, int num_indices,
         shared_ptr<VertexVBO> normals_vbo, float r, float g, float b);
+        
+    void draw_lines_vbo(shared_ptr<VertexVBO> vertices_vbo, 
+        shared_ptr<int> indices, int num_indices,
+        shared_ptr<VertexVBO> normals_vbo, float r, float g, float b);
 };
 
 

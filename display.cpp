@@ -236,6 +236,31 @@ Display::draw_triangle_strip_vbo(shared_ptr<VertexVBO> vertices_vbo,
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void 
+Display::draw_lines_vbo(shared_ptr<VertexVBO> vertices_vbo, 
+        shared_ptr<int> indices, int num_indices,
+        shared_ptr<VertexVBO> normals_vbo, float r, float g, float b) {
+    glColor3f(r, g, b);
+    
+    // setup vertices
+    glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo->get_vbo());
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, 0);
+
+    // setup normals
+    glBindBuffer(GL_ARRAY_BUFFER, normals_vbo->get_vbo());
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glNormalPointer(GL_FLOAT, 0, 0);
+
+    glDrawElements(GL_LINES, num_indices, GL_UNSIGNED_INT, indices.get());  
+ 
+    // clean up
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 
 VBO::VBO(void * data, int size, unsigned int target) {
     _target = target;

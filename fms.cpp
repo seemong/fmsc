@@ -67,7 +67,8 @@ void
 redraw(Display * display, void * arg) {
     Meshes * meshes = (Meshes *) arg;
     
-    FaceRectangleMesh * m = meshes->face;
+    // FaceRectangleMesh * m = meshes->face;
+    WireRectangleMesh * m = meshes->wire;
     shared_ptr<float> vertices = m->get_vertices();
     int num_vertices = m->get_number_of_vertices();
     shared_ptr<float> normals = m->get_normals();
@@ -97,9 +98,12 @@ redraw(Display * display, void * arg) {
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
             normals, earth_color[0], earth_color[1], earth_color[2]);  
         */
-        
+        display->draw_lines_vbo(vertex_vbo, indices, num_indices,
+            normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
+        /*
         display->draw_triangle_strip_vbo(vertex_vbo, indices, num_indices, 
             normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
+            */
     }
     /*
     WireRectangleMesh * wire = meshes->wire;
@@ -133,7 +137,7 @@ main(int argc, char * argv[]) {
     display->create();
     
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 1200, 1200);
+    GeoTile tile = g->read_data_as_tile(0, 0, 250, 250);
     shared_ptr<float> v = tile.get_vertices();
     for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
         // printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
