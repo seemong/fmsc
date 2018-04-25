@@ -4,7 +4,8 @@ OBJECTS = \
 	geometry.o \
 	mapobject.o \
 	mesh.o \
-	fms.o
+	fms.o \
+	mapstore.o
 
 TARGET = fms
 
@@ -18,7 +19,7 @@ LIBS = -lxml2 -lGL -lglut -lGLU -lgdal
 $(TARGET): $(OBJECTS)
 	g++ $(OBJECTS) $(LIBS) $(CFLAGS) -o fms
 
-fms.o: fms.cpp geometry.h mapobject.h display.h geofile.h mesh.h
+fms.o: fms.cpp geometry.h mapobject.h display.h geofile.h mesh.h mapstore.h
 
 geometry.o: geometry.h geometry.cpp
 
@@ -30,9 +31,13 @@ geofile.o: geofile.h geofile.cpp mesh.h
 
 mesh.o: mesh.h mesh.cpp
 
+mapstore.o: mapstore.h mapstore.cpp
+
+testfms.o: testfms.cpp
+
 clean:
 	rm $(OBJECTS) $(TARGET)
 
-test: display.o test.o
-	g++ display.o test.o $(LIBS) $(CFLAGS) -o test
+testfms: display.o testfms.o mapstore.o
+	g++ display.o testfms.o mapstore.o $(LIBS) $(CFLAGS) -o testfms
 	
