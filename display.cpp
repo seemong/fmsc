@@ -123,8 +123,10 @@ Display::lookAt(float eyex, float eyey, float eyez,
 
 void
 Display::set_light_position(float x, float y, float z, float w) {
+    glPushMatrix();
     GLfloat position[] = { x, y, z, w };
     glLightfv(GL_LIGHT0, GL_POSITION, position);
+    glPopMatrix();
 }
 
 void

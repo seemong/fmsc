@@ -52,6 +52,7 @@ int streamFile(char *filename) {
 
 float eyex, eyey, eyez;
 float centerx, centery, centerz;
+float upx = 0, upy = 0, upz = 1;
 
 class Meshes {
 public:
@@ -81,12 +82,22 @@ redraw(Display * display, void * arg) {
     static float theta = 0;
     eyey = eyey + meters_to_arc(5);
     if (eyey > 48)
-        eyey = 47;
+        eyey = 47.2;
         
     theta += 0.1;
     
-    display->lookAt(eyex, eyey, eyez, centerx, 90, 0, 0, 0, 1);
-#ifdef MESH_VBO
+    static float eyetheta = 0;
+    static float step = 0.01;
+    upx = sin(eyetheta);
+    upz = cos(eyetheta);
+    if (eyetheta > 3.14/4 || eyetheta < -3.14/4)
+        step = -step;
+    eyetheta += step;
+    
+    display->lookAt(eyex, eyey, eyez, centerx, 90, 0, upx, upy, upz);
+    display->set_light_position(0, 0, 100, 1);
+    
+ #ifdef MESH_VBO
     shared_ptr<VertexVBO> vertex_vbo = m->get_vertex_vbo();
     shared_ptr<VertexVBO> normals_vbo = m->get_normals_vbo();
 #endif
@@ -96,7 +107,6 @@ redraw(Display * display, void * arg) {
         shared_ptr<int> indices = it->get_indices();
         int num_indices = it->get_number_of_indices();
          
-        
         display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
             normals, earth_color[0], earth_color[1], earth_color[2]);  
         
