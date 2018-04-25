@@ -133,7 +133,7 @@ main(int argc, char * argv[]) {
     display->create();
     
     shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    GeoTile tile = g->read_data_as_tile(0, 0, 400, 400);
+    GeoTile tile = g->read_data_as_tile(0, 0, 1200, 1200);
     shared_ptr<float> v = tile.get_vertices();
     for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
         // printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);

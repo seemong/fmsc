@@ -220,16 +220,12 @@ Display::draw_triangle_strip_vbo(shared_ptr<VertexVBO> vertices_vbo,
     glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo->get_vbo());
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, 0);
-    
-    printf("Bound vertex VBO %d\n", vertices_vbo->get_vbo());
 
     // setup normals
     glBindBuffer(GL_ARRAY_BUFFER, normals_vbo->get_vbo());
     glEnableClientState(GL_NORMAL_ARRAY);
     glNormalPointer(GL_FLOAT, 0, 0);
 
-    printf("Bound normal VBO %d\n", normals_vbo->get_vbo());
-    
     glDrawElements(GL_TRIANGLE_STRIP, num_indices, GL_UNSIGNED_INT, 
         indices.get());  
  
