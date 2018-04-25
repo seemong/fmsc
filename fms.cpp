@@ -88,7 +88,7 @@ redraw(Display * display, void * arg) {
     theta += 0.1;
     
     static float eyetheta = 0;
-    static float step = 0.01;
+    static float step = 0.001;
     upx = sin(eyetheta);
     upz = cos(eyetheta);
     if (eyetheta > 3.14/4 || eyetheta < -3.14/4)

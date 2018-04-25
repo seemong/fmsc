@@ -9,6 +9,7 @@
 #include <GL/glext.h>
 #include <cassert>
 #include "display.h"
+#include "geofile.h"
 
 // The list of displays
 list<Display *> Display::_displays;
@@ -62,6 +63,27 @@ Display::create() {
     glLightfv(GL_LIGHT0, GL_POSITION, position);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
+    
+    // set anti-aliasing
+#if ANTIALIAS
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_POLYGON_SMOOTH);
+    glEnable(GL_LINE_SMOOTH);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+#endif
+#if FOG
+    glEnable(GL_FOG);
+    {
+        GLfloat fogColor[] = {0.5, 0.5, 0.5, 1.0 };
+        static GLint fogMode = GL_EXP;
+        glFogi(GL_FOG_MODE, fogMode);
+        glFogf(GL_FOG_DENSITY, 0.35);
+        glHint(GL_FOG_HINT, GL_DONT_CARE);
+        glFogf(GL_FOG_START, meters_to_arc(6000));
+        glFogf(GL_FOG_END, meters_to_arc(100000));
+    }
+#endif
 }
 
 void
