@@ -86,7 +86,7 @@ redraw(Display * display, void * arg) {
         int num_vertices = mesh->get_number_of_vertices();
         shared_ptr<float> normals = mesh->get_normals();
         list<IndexStrip> index_list = mesh->get_index_list();
-    
+        
         static float earth_color[] = {135/256.0, 67/256.0, 23/256.0};
     
         display->lookAt(eyex, eyey, eyez, centerx, 90, 0, upx, upy, upz);

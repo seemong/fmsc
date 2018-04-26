@@ -44,16 +44,22 @@ GeoFile::open() {
     _right = _left +  _xincrement * (_cols - 1);
     _bottom = _top - _yincrement * (_rows - 1);
     
+    GDALClose(_dataset);
+    _dataset = 0;
+    
     return true;
 }
 
 GeoFile::~GeoFile() {
-    GDALClose(_dataset);
+    if (_dataset != 0)
+        GDALClose(_dataset);
 }
 
 
 shared_ptr<float>
 GeoFile::read_data(int xoff, int yoff, int xsize, int ysize) {
+    _dataset = (GDALDataset *) GDALOpen(_filename.c_str(), GA_ReadOnly);
+
     shared_ptr<float> data(new float[xsize * ysize]);
     GDALRasterBand * band = _dataset->GetRasterBand(1);
     for(int row = 0; row < ysize; row++) {
@@ -61,6 +67,10 @@ GeoFile::read_data(int xoff, int yoff, int xsize, int ysize) {
             data.get(), xsize, ysize, GDT_Float32, 0, 0);
         assert(err == CE_None);
     }
+    
+    GDALClose(_dataset);
+    _dataset = 0;
+    
     return data;
 }
 
