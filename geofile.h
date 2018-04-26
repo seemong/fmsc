@@ -28,10 +28,8 @@ protected:
 
 public:
     GeoTile(int xsize, int ysize, float left, float bottom,
-        float right, float top, shared_ptr<float> vertices) :
-        _xsize(xsize), _ysize(ysize), _left(left), _bottom(bottom),
-        _right(right), _top(top), _vertices(vertices){
-    }
+        float right, float top, shared_ptr<float> vertices);
+    ~GeoTile();
 
     inline int get_xsize() { return _xsize; }
     inline int get_ysize() { return _ysize; }

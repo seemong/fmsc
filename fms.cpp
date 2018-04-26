@@ -69,19 +69,21 @@ redraw(Display * display, void * arg) {
     Mapcache * mapcache = (Mapcache *) arg;
     
     static float position[] = {
-        -122.5, 44.01, meters_to_arc(1000.0)
+        -122.5, 44.01, meters_to_arc(2000.0)
     };
     static float eyex = position[0], eyey = position[1], eyez = position[2];
     static float centerx, centery, centerz;
+    centerx = eyex;
+    centery = 90;
+    centerz = eyez;
     static float upx = 0, upy = 0, upz = 1;
-    
-    list<GeoTile> geotiles = mapcache->get_tiles(position[0], position[1],
-        position[2]);
+    eyey += meters_to_arc(50);
+
+    list<GeoTile> geotiles = mapcache->get_tiles(eyex, eyey, eyez);
     for(GeoTile& tile : geotiles) {
         FaceRectangleMesh mesh(tile.get_vertices(), tile.get_xsize(),
             tile.get_ysize());
 
-        // WireRectangleMesh * m = meshes->wire;
         shared_ptr<float> vertices = mesh.get_vertices();
         int num_vertices = mesh.get_number_of_vertices();
         shared_ptr<float> normals = mesh.get_normals();

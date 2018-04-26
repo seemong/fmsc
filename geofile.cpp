@@ -10,6 +10,19 @@
 #include <iostream>
 #include "geofile.h"
 
+GeoTile::GeoTile(int xsize, int ysize, float left, float bottom,
+        float right, float top, shared_ptr<float> vertices) :
+        _xsize(xsize), _ysize(ysize), _left(left), _bottom(bottom),
+        _right(right), _top(top), _vertices(vertices) {
+    cout << "Constructing GeoTile(" << this << ", " << "vertex use count=" << 
+        _vertices.use_count() << ")" << endl;
+}
+
+GeoTile::~GeoTile() {
+    cout << "Deleting GeoTile(" << this << ", " << "vertex use count=" << 
+        _vertices.use_count() << ")" << endl;
+}
+
 void
 GeoFile::init() {
     static bool initialized = false;
