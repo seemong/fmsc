@@ -79,6 +79,11 @@ redraw(Display * display, void * arg) {
     eyey += meters_to_arc(50);
 
     list<shared_ptr<GeoTile>> geotiles = mapcache->get_tiles(eyex, eyey, eyez);
+    if (geotiles.size() == 0) {
+        eyey = position[1];
+        return;
+    }      
+    
     for(shared_ptr<GeoTile>& tile : geotiles) {
         shared_ptr<FaceRectangleMesh> mesh = tile->get_face_mesh();
 
