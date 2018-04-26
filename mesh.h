@@ -5,7 +5,7 @@
  */
 
 #ifndef MESH_H
-#define MESH_h
+#define MESH_H
 
 #include <memory>
 #include <list>
@@ -102,4 +102,4 @@ public:
 
 list<IndexStrip> make_faces(int _xsize, int _ysize) ;
 
-#endif
+#endif // MESH_H

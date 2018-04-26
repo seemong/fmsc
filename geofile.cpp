@@ -10,19 +10,6 @@
 #include <iostream>
 #include "geofile.h"
 
-GeoTile::GeoTile(int xsize, int ysize, float left, float bottom,
-        float right, float top, shared_ptr<float> vertices) :
-        _xsize(xsize), _ysize(ysize), _left(left), _bottom(bottom),
-        _right(right), _top(top), _vertices(vertices) {
-    cout << "Constructing GeoTile(" << this << ", " << "vertex use count=" << 
-        _vertices.use_count() << ")" << endl;
-}
-
-GeoTile::~GeoTile() {
-    cout << "Deleting GeoTile(" << this << ", " << "vertex use count=" << 
-        _vertices.use_count() << ")" << endl;
-}
-
 void
 GeoFile::init() {
     static bool initialized = false;
@@ -77,7 +64,7 @@ GeoFile::read_data(int xoff, int yoff, int xsize, int ysize) {
     return data;
 }
 
-GeoTile
+shared_ptr<GeoTile>
 GeoFile::read_data_as_tile(int xoff, int yoff,
     int xsize, int ysize) {
     shared_ptr<float> band_data = read_data(xoff, yoff, xsize, ysize);
@@ -97,11 +84,12 @@ GeoFile::read_data_as_tile(int xoff, int yoff,
             vertex_data.get()[vertex_index + 2] = z;
         }
     }
-    return GeoTile(xsize, ysize, boxleft, boxbottom, boxright, boxtop,
-        vertex_data);
+    shared_ptr<GeoTile> geotile = shared_ptr<GeoTile>(new GeoTile(xsize, ysize, boxleft, boxbottom, boxright, boxtop,
+        vertex_data));
+    return geotile;
 }
 
-GeoTile
+shared_ptr<GeoTile>
 GeoFile::get_tile(float left, float bottom, float right, float top) {
     // Set bounding box limits
     if (left < _left) left = _left;

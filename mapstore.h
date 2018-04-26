@@ -31,7 +31,7 @@ public:
      * Given lon/lat coordinates of a bounding box and resolution in arc 
      * seconds, return a list of GeoTiles that represent the data
      */
-    list<GeoTile> get_geotiles(float left, float bottom, float right, float top, 
+    list<shared_ptr<GeoTile>> get_geotiles(float left, float bottom, float right, float top, 
         int resolution);
 };
 

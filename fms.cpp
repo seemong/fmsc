@@ -8,7 +8,6 @@
 #include "mapobject.h"
 #include "display.h"
 #include "geofile.h"
-#include "mesh.h"
 #include "mapstore.h"
 #include "mapcache.h"
 using namespace std;
@@ -79,15 +78,14 @@ redraw(Display * display, void * arg) {
     static float upx = 0, upy = 0, upz = 1;
     eyey += meters_to_arc(50);
 
-    list<GeoTile> geotiles = mapcache->get_tiles(eyex, eyey, eyez);
-    for(GeoTile& tile : geotiles) {
-        FaceRectangleMesh mesh(tile.get_vertices(), tile.get_xsize(),
-            tile.get_ysize());
+    list<shared_ptr<GeoTile>> geotiles = mapcache->get_tiles(eyex, eyey, eyez);
+    for(shared_ptr<GeoTile>& tile : geotiles) {
+        shared_ptr<FaceRectangleMesh> mesh = tile->get_face_mesh();
 
-        shared_ptr<float> vertices = mesh.get_vertices();
-        int num_vertices = mesh.get_number_of_vertices();
-        shared_ptr<float> normals = mesh.get_normals();
-        list<IndexStrip> index_list = mesh.get_index_list();
+        shared_ptr<float> vertices = mesh->get_vertices();
+        int num_vertices = mesh->get_number_of_vertices();
+        shared_ptr<float> normals = mesh->get_normals();
+        list<IndexStrip> index_list = mesh->get_index_list();
     
         static float earth_color[] = {135/256.0, 67/256.0, 23/256.0};
     
