@@ -5,7 +5,8 @@ OBJECTS = \
 	mapobject.o \
 	mesh.o \
 	fms.o \
-	mapstore.o
+	mapstore.o \
+	mapcache.o
 
 TARGET = fms
 
@@ -33,11 +34,13 @@ mesh.o: mesh.h mesh.cpp
 
 mapstore.o: mapstore.h mapstore.cpp
 
+mapcache.o: mapcache.h mapcache.cpp
+
 testfms.o: testfms.cpp
 
 clean:
 	rm $(OBJECTS) $(TARGET)
 
-testfms: display.o testfms.o mapstore.o geofile.o
+testfms: display.o testfms.o mapstore.o geofile.o mapcache.o
 	g++ display.o testfms.o mapstore.o geofile.o $(LIBS) $(CFLAGS) -o testfms
 	

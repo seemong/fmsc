@@ -11,10 +11,8 @@
 #include "mapstore.h"
 using namespace std;
 
-Mapstore::Mapstore(list<string> directories) {
-    for(const string& directory : directories) {
-        add_geofiles_from_directory(directory);
-    }
+Mapstore::Mapstore(const string& directory) {
+    add_geofiles_from_directory(directory);
 }
 
 void 

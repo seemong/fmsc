@@ -9,6 +9,9 @@
 #include "display.h"
 #include "geofile.h"
 #include "mesh.h"
+#include "mapstore.h"
+#include "mapcache.h"
+using namespace std;
 
 
 int streamFile(char *filename) {
@@ -51,10 +54,6 @@ int streamFile(char *filename) {
     }
 }
 
-float eyex, eyey, eyez;
-float centerx, centery, centerz;
-float upx = 0, upy = 0, upz = 1;
-
 class Meshes {
 public:
     FaceRectangleMesh * face;
@@ -67,71 +66,42 @@ public:
  */
 void
 redraw(Display * display, void * arg) {
-    Meshes * meshes = (Meshes *) arg;
+    Mapcache * mapcache = (Mapcache *) arg;
     
-    FaceRectangleMesh * m = meshes->face;
-    // WireRectangleMesh * m = meshes->wire;
-    shared_ptr<float> vertices = m->get_vertices();
-    int num_vertices = m->get_number_of_vertices();
-    shared_ptr<float> normals = m->get_normals();
-    list<IndexStrip> index_list = m->get_index_list();
+    static float position[] = {
+        -122.5, 44.01, meters_to_arc(1000.0)
+    };
+    static float eyex = position[0], eyey = position[1], eyez = position[2];
+    static float centerx, centery, centerz;
+    static float upx = 0, upy = 0, upz = 1;
     
-    static float earth_color[] = {135/256.0, 67/256.0, 23/256.0};
-    
-    //printf("Draw mesh with %d vertices\n", num_vertices);
-    
-    static float theta = 0;
-    eyey = eyey + meters_to_arc(5);
-    if (eyey > 48)
-        eyey = 47.2;
-        
-    theta += 0.1;
-    
-    static float eyetheta = 0;
-    static float step = 0.001;
-    upx = sin(eyetheta);
-    upz = cos(eyetheta);
-    if (eyetheta > 3.14/4 || eyetheta < -3.14/4)
-        step = -step;
-    eyetheta += step;
-    
-    display->lookAt(eyex, eyey, eyez, centerx, 90, 0, upx, upy, upz);
-    display->set_light_position(0, 0, 100, 1);
-    
- #ifdef MESH_VBO
-    shared_ptr<VertexVBO> vertex_vbo = m->get_vertex_vbo();
-    shared_ptr<VertexVBO> normals_vbo = m->get_normals_vbo();
-#endif
-    for(list<IndexStrip>::iterator it = index_list.begin();
-        it != index_list.end(); it++) {
-            
-        shared_ptr<int> indices = it->get_indices();
-        int num_indices = it->get_number_of_indices();
-         
-        display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
-            normals, earth_color[0], earth_color[1], earth_color[2]);  
-        
-        /*
-        display->draw_lines_vbo(vertex_vbo, indices, num_indices,
-            normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
-            */
-        /*
-        display->draw_triangle_strip_vbo(vertex_vbo, indices, num_indices, 
-            normals_vbo, earth_color[0], earth_color[1], earth_color[2]);
-            */
-    }
-    /*
-    WireRectangleMesh * wire = meshes->wire;
-    index_list = wire->get_index_list();
-    for(list<IndexStrip>::iterator it = index_list.begin();
-        it != index_list.end(); it++) {
-        shared_ptr<int> indices = it->get_indices();
-        int num_indices = it->get_number_of_indices();
+    list<GeoTile> geotiles = mapcache->get_tiles(position[0], position[1],
+        position[2]);
+    for(GeoTile& tile : geotiles) {
+        FaceRectangleMesh mesh(tile.get_vertices(), tile.get_xsize(),
+            tile.get_ysize());
 
-        display->draw_lines(vertices, num_vertices, indices, num_indices, 
-            normals, 0.1, 0, 0, 2);  
+        // WireRectangleMesh * m = meshes->wire;
+        shared_ptr<float> vertices = mesh.get_vertices();
+        int num_vertices = mesh.get_number_of_vertices();
+        shared_ptr<float> normals = mesh.get_normals();
+        list<IndexStrip> index_list = mesh.get_index_list();
+    
+        static float earth_color[] = {135/256.0, 67/256.0, 23/256.0};
+    
+        display->lookAt(eyex, eyey, eyez, centerx, 90, 0, upx, upy, upz);
+        display->set_light_position(0, 0, 100, 1);
+ 
+        for(list<IndexStrip>::iterator it = index_list.begin();
+            it != index_list.end(); it++) {
+            
+            shared_ptr<int> indices = it->get_indices();
+            int num_indices = it->get_number_of_indices();
+         
+            display->draw_triangle_strip(vertices, num_vertices, indices, num_indices, 
+                normals, earth_color[0], earth_color[1], earth_color[2]);  
+        }
     }
-    */
 }
 
 int
@@ -150,71 +120,15 @@ main(int argc, char * argv[]) {
     Display::Init(argc, argv);
     Display * display = new Display("the display", 0, 0, 800, 800);
     display->create();
+       
+    shared_ptr<Mapstore> mapstore = 
+        shared_ptr<Mapstore>(new Mapstore(argv[1]));
+    Mapcache mapcache(mapstore, meters_to_arc(8000), meters_to_arc(4000));
     
-    shared_ptr<GeoFile> g(new GeoFile(argv[1]));
-    bool good = g->open();
-    assert(good);
-        
-    GeoTile tile = g->read_data_as_tile(0, 0, 250, 250);
-    shared_ptr<float> v = tile.get_vertices();
-    for(int i = 0; i < tile.get_xsize() * tile.get_ysize(); i++) {
-        // printf("(%f, %f, %f) ", v.get()[3*i], v.get()[3*i+1], v.get()[3*i+2]);
-    }
-    
-    float min_x = tile.get_left();
-    float min_y = tile.get_bottom();
-    float max_x = tile.get_right();
-    float max_y = tile.get_top();
-    
-    centerx = (min_x + max_x) / 2;
-    centery = (min_y + max_y) / 2;
-    centerz = 0.0;
-    
-    eyex = (min_x + max_x)/2;
-    eyey = min_y;
-    eyez = meters_to_arc(2000);
-    
-    printf("eyex=%f, eyey=%f, eyez=%f\n", eyex, eyey, eyez);
-    printf("cenx=%f, ceny=%f, cenz=%f\n", centerx, centery, 0.0);
-    
-    list<IndexStrip> is = make_faces(5, 3);
-    for(list<IndexStrip>::iterator it = is.begin(); it != is.end(); it++) {
-        shared_ptr<int> indices = it->get_indices();
-        int num_indices = it->get_number_of_indices();
-        for(int i = 0; i < num_indices; i++) {
-            // printf("%d ", indices.get()[i]);
-        }
-        // printf("\n");
-    }
-    
-    FaceRectangleMesh face(v, tile.get_xsize(), tile.get_ysize());
-    printf("Normals:\n");
-    shared_ptr<float> n = face.get_normals();
-    for(int i = 0; i < face.get_number_of_normals(); i++) {
-        // printf("(%f, %f, %f) ", n.get()[3*i], n.get()[3*i+1], n.get()[3*i+2]);
-    }
-    // printf("\n");
-    
-    WireRectangleMesh wire(v, tile.get_xsize(), tile.get_ysize());
-    
-    Meshes meshes;
-    meshes.wire = &wire;
-    meshes.face = &face;
-    
-    display->set_redraw(redraw, &meshes);
+    display->set_redraw(redraw, &mapcache);
     display->set_perspective(90, 1, meters_to_arc(10), 500);
-    // display->lookAt(15, 15, 15, 0, 0, 0, 0, 0, 1);
-    /*
-    display->set_ortho(tile.get_left(), tile.get_right(), 
-        tile.get_bottom(), tile.get_top(), -5000, 5000);
-        */
-    // display->set_light_position(5, 5, 5, 1);
-
     clock_t t = clock();
     for(;;) {
-
-        // d->set_light_position(eyex, eyey, 0, 0);
-
         display->do_event();
         display->post_redisplay();
 

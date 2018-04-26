@@ -25,7 +25,7 @@ public:
     /**
      * Create a mapstore based on all the given files
      */
-    Mapstore(list<string> filepaths);
+    Mapstore(const string& filepaths);
     
     /**
      * Given lon/lat coordinates of a bounding box and resolution in arc 
