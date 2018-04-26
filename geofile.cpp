@@ -84,7 +84,7 @@ GeoFile::read_data_as_tile(int xoff, int yoff,
             vertex_data.get()[vertex_index + 2] = z;
         }
     }
-    shared_ptr<GeoTile> geotile = shared_ptr<GeoTile>(new GeoTile(xsize, ysize, boxleft, boxbottom, boxright, boxtop,
+    shared_ptr<GeoTile> geotile(new GeoTile(xsize, ysize, boxleft, boxbottom, boxright, boxtop,
         vertex_data));
     return geotile;
 }

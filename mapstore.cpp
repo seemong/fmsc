@@ -38,7 +38,7 @@ Mapstore::add_geofiles_from_directory(const string& directory) {
 void
 Mapstore::add_geofile(const string& filename) {
     cout << "Adding geo file " + filename << endl;
-    shared_ptr<GeoFile> geofile = shared_ptr<GeoFile>(new GeoFile(filename));
+    shared_ptr<GeoFile> geofile(new GeoFile(filename));
     bool good = geofile->open();
     if (good) {
         _geo_files.push_back(geofile);
