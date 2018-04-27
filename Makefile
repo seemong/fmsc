@@ -7,7 +7,8 @@ OBJECTS = \
 	mesh.o \
 	fms.o \
 	mapstore.o \
-	mapcache.o
+	mapcache.o \
+	sthread.o
 
 TARGET = fms
 
@@ -21,7 +22,8 @@ LIBS = -lxml2 -lGL -lglut -lGLU -lgdal
 $(TARGET): $(OBJECTS)
 	g++ $(OBJECTS) $(LIBS) $(CFLAGS) -o $(TARGET)
 
-fms.o: fms.cpp geometry.h mapobject.h display.h geofile.h mesh.h mapstore.h geotile.h
+fms.o: fms.cpp geometry.h mapobject.h display.h geofile.h mesh.h \
+	mapstore.h geotile.h sthread.h
 
 geometry.o: geometry.h geometry.cpp
 
@@ -38,6 +40,8 @@ mesh.o: mesh.h mesh.cpp
 mapstore.o: mapstore.h mapstore.cpp
 
 mapcache.o: mapcache.h mapcache.cpp
+
+sthread.o: sthread.h
 
 testfms.o: testfms.cpp
 

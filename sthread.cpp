@@ -6,6 +6,8 @@
 
 #include <cassert>
 #include <pthread.h>
+#include <thread>
+#include <chrono>
 #include "sthread.h"
 using namespace std;
 
@@ -18,6 +20,11 @@ set_thread_priority(thread& t, int priority) {
     if(pthread_setschedparam(t.native_handle(), SCHED_RR, &sch_params)) {
         assert(false);
     }
+}
+
+void
+sleep_millis(int millis) {
+    this_thread::sleep_for(chrono::milliseconds(millis));
 }
 
 };

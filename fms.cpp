@@ -10,6 +10,7 @@
 #include "geofile.h"
 #include "mapstore.h"
 #include "mapcache.h"
+#include "sthread.h"
 using namespace std;
 
 
@@ -138,6 +139,9 @@ main(int argc, char * argv[]) {
         display->post_redisplay();
 
         clock_t t_new = clock();
+	int sleep_time = int(float(t_new - t)/CLOCKS_PER_SEC * 1000);
+	if (sleep_time > 0)
+	    Sthread::sleep_millis(sleep_time);
         cout << "tick=" << float(t_new - t)/CLOCKS_PER_SEC * 1000 << " ms\n";
         t = t_new;
     }
